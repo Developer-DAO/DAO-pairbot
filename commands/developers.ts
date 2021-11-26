@@ -5,7 +5,7 @@ let AsciiTable = require('ascii-table')
 
 export const data = new SlashCommandBuilder()
     .setName('developers')
-    .setDescription('awe')
+    .setDescription('developers')
     .addSubcommand(subcommand => 
         subcommand.setName('all')
         .setDescription('List all developers')

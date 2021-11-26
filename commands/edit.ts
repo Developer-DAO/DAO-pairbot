@@ -5,11 +5,10 @@ import { supabase } from '../database';
 export const data = new SlashCommandBuilder()
   .setName('edit')
   .setDescription('Edit your profile.')
-  .addStringOption(option => option.setName('name').setDescription("Enter your name"))
-  .addStringOption(option => option.setName('timezone').setDescription('Enter your timezone'))
-  .addStringOption(option => option.setName('skills').setDescription('Enter your skills'))
-  .addStringOption(option => option.setName('desired_skills').setDescription('Enter your desired skills')) 
   .addStringOption(option => option.setName('position').setDescription('Enter your current position'))
+  .addStringOption(option => option.setName('skills').setDescription('Enter your skills'))
+  .addStringOption(option => option.setName('desired-skills').setDescription('Enter your desired skills')) 
+  .addStringOption(option => option.setName('timezone').setDescription('Enter your timezone'))
   .addStringOption(option => option.setName('twitter').setDescription('Enter Twitter handle'))
   .addStringOption(option => option.setName('github').setDescription('Enter Github handle'))
 
@@ -19,14 +18,13 @@ export async function execute(interaction: CommandInteraction) {
     const { error } = await supabase
     .from('developers')
     .update({ 
-        ...(options.getString('name') != null && {name: options.getString('name')}),
-        ...(options.getString('timezone') != null && {timezone: options.getString('timezone')}),
-        ...(options.getString('skills') != null && {skills: options.getString('skills')}),
-        ...(options.getString('desired_skills') != null && {desired_skills: options.getString('desired_skills')}),
         ...(options.getString('position') != null && {position: options.getString('position')}),
+        ...(options.getString('skills') != null && {skills: options.getString('skills')}),
+        ...(options.getString('desired-skills') != null && {desired_skills: options.getString('desired-skills')}),
+        ...(options.getString('timezone') != null && {timezone: options.getString('timezone')}),
         ...(options.getString('twitter') != null && {twitter: options.getString('twitter')}),
         ...(options.getString('github') != null && {github: options.getString('github')}),     
-    }).eq('discord', interaction.user.tag)
+    }).eq('discord_id', interaction.user.id)
     
     if (error != null) {
         await interaction.reply({

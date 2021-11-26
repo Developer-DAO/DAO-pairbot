@@ -12,7 +12,7 @@ export async function execute(interaction: CommandInteraction) {
     const { error } = await supabase
     .from('developers')
     .delete()
-    .eq('discord', interaction.user.tag)
+    .eq('discord_id', interaction.user.id)
 
 
     if (error != null) {

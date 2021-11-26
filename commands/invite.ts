@@ -23,7 +23,7 @@ export async function execute(interaction: CommandInteraction) {
     const { data, error } = await supabase
     .from('developers')
     .select()
-    .eq('discord', options.getUser('developer')?.tag)
+    .eq('discord_id', options.getUser('developer')?.id)
 
     if (error != null) {
         await interaction.reply({
@@ -48,7 +48,7 @@ export async function execute(interaction: CommandInteraction) {
     const { data: inviterData, error: inviterError } = await supabase
     .from('developers')
     .select()
-    .eq('discord', interaction.user?.tag)
+    .eq('discord_id', interaction.user?.id)
 
     if (inviterError != null) {
         await interaction.reply({
@@ -60,7 +60,6 @@ export async function execute(interaction: CommandInteraction) {
     }
 
     const { 
-        name: inviterName, 
         timezone: inviterTimezone,
         discord: inviterDiscord, 
         skills:inviterSkills, 
@@ -73,7 +72,7 @@ export async function execute(interaction: CommandInteraction) {
 
     const inviterProfile = new MessageEmbed()
 	.setColor('#0099ff')
-	.setTitle(`${inviterName.charAt(0).toUpperCase() + inviterName.slice(1)}'s profile`)
+	.setTitle(`${inviterDiscord.charAt(0).toUpperCase() + inviterDiscord.slice(1)}'s profile`)
 	.setThumbnail(interaction.user?.avatarURL()!)
 	.setDescription(inviterPosition)
     .addFields(
@@ -82,7 +81,6 @@ export async function execute(interaction: CommandInteraction) {
         {name: 'Goal', value: inviterGoal ?? "none"},
         {name: 'Available', value: inviterAvailable ? 'True' : 'False', inline: true},
         {name: 'Timezone', value: inviterTimezone, inline: true},
-        {name: 'Discord', value: inviterDiscord, inline:true},
         {name: 'Github', value: `https://github.com/${inviterGithub}`, inline: true},
         {name: 'Twitter', value: `https://twitter.com/${inviterTwitter}`, inline: true},
     )

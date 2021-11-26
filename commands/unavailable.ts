@@ -12,7 +12,7 @@ export async function execute(interaction: CommandInteraction) {
     .update({ 
         available: false,
         goal: null,     
-    }).eq('discord', interaction.user.tag)
+    }).eq('discord_id', interaction.user.id)
     
     if (error != null) {
         await interaction.reply({
