@@ -35,6 +35,7 @@
 ### Prerequisites
 - [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/)
 - [Node.js](https://nodejs.org/en/download/) (16.13.0)
+- [Docker](https://www.docker.com/get-started)
 - [supabase cli](https://github.com/supabase/cli)
 
 ### Installation
@@ -42,19 +43,25 @@
    ```sh
    git clone https://github.com/mbuxmann/DAO-pairbot.git
    ```
-  
-  2. Install NPM packages
+  2. Change directory
+   ```sh
+   cd DAO-pairbot
+   ```
+  3. Install NPM packages
    ```sh
    npm install
    ```  
-
-  3. Create .env file and fill it out with your details
+  4. Initialize supabase
+   ```sh
+   supabase init
+   ```  
+  5. Create .env file and fill it out with your details
    ```
    DISCORD_TOKEN=
    GUILD_ID=
    CLIENT_ID=
    SUPABASE_URL=
-   SUPABASE_TOKEN=
+  SUPABASE_ANON_KEY=
    ```
 
 ## Usage
