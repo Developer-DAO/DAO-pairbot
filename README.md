@@ -25,46 +25,42 @@
 
 
 ## About The Project
+The idea behind the bot is to help people collaborate, learn and in the end make new friends. Especially now in the beginning where everything feels chaotic and you don’t know where to begin. The idea is that you can use the bot to see what other people are busy building and if they are available you can join and help build something awesome together.
 
 ### Built With
 - TypeScript
 - Discord.js
-- Supabase
+- Supabase 
   
 ## Getting Started
 ### Prerequisites
 - [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/)
 - [Node.js](https://nodejs.org/en/download/) (16.13.0)
-- [Docker](https://www.docker.com/get-started)
-- [supabase cli](https://github.com/supabase/cli)
+- [Supabase Account](https://app.supabase.io/)
 
 ### Installation
   1. Clone the repo
    ```sh
    git clone https://github.com/mbuxmann/DAO-pairbot.git
    ```
-  2. Change directory
+  2. Change directory and install NPM packages
    ```sh
-   cd DAO-pairbot
+   cd DAO-pairbot && npm install
    ```
-  3. Install NPM packages
-   ```sh
-   npm install
-   ```  
-  4. Initialize supabase
-   ```sh
-   supabase init
-   ```  
-  5. Create .env file and fill it out with your details
+  3. Create Supabase project.
+  4. Create .env file and fill it out with your details
    ```
    DISCORD_TOKEN=
    GUILD_ID=
    CLIENT_ID=
    SUPABASE_URL=
-  SUPABASE_ANON_KEY=
+   SUPABASE_ANON_KEY=
    ```
+   5. Copy the snippets in SQL-snippets and paste in the SQL Editor on Supabase and click run.
 
 ## Usage
+
+
 ## Roadmap
 ## Contributing
 ## License
