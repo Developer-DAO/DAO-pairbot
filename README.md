@@ -41,7 +41,7 @@ The idea behind the bot is to help people collaborate, learn and in the end make
 ### Installation
   1. Clone the repo
    ```sh
-   git clone https://github.com/mbuxmann/DAO-pairbot.git
+   git clone https://github.com/Developer-DAO/DAO-pairbot.git
    ```
   2. Change directory and install NPM packages
    ```sh
