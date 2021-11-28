@@ -59,8 +59,6 @@ The idea behind the bot is to help people collaborate, learn and in the end make
    5. Copy the snippets in SQL-snippets and paste in the SQL Editor on Supabase and click run.
 
 ## Usage
-
-
 ## Roadmap
 ## Contributing
 ## License
