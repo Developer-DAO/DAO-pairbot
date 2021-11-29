@@ -29,31 +29,6 @@ body:
         4. See error
     validations:
       required: true
-  - type: "checkboxes"
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-      options:
-        - label: Firefox
-        - label: Chrome
-        - label: Safari
-        - label: Microsoft Edge
-  - type: checkboxes
-    id: devices
-    attributes:
-      label: What device type(s) did you see the problem on?
-      options:
-        - label: "Desktop"
-        - label: "Mobile"
-        - label: "Tablet"
-  - type: checkboxes
-    id: operating-system
-    attributes:
-      label: "What operating system(s) did you see the problem on?"
-      options:
-        - label: "macOS"
-        - label: "Windows"
-        - label: "Linux"
   - type: textarea
     id: additional
     attributes:
