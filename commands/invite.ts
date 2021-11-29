@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     const { options } = interaction;
-    
+    console.log(interaction.createdAt)
     if (options.getUser('developer')!.id === interaction.user.id) {
         await interaction.reply({
             content: "Can't invite yourself.",
@@ -89,13 +89,15 @@ export async function execute(interaction: CommandInteraction) {
     .addComponents(new MessageButton()
     .setCustomId(`accept-${interaction.user?.id}`)
     .setLabel('Accept').setStyle('SUCCESS'))
-
+    
+  
+    
     options.getUser('developer')?.send({  
         content: `You have been invited to pair up with ${interaction.user.tag}`,
         embeds: [inviterProfile],
         components: [acceptRow],
     });
-  
+    
     await interaction.reply({
         content: `Successfully invited ${options.getUser('developer')?.tag}!`,
         ephemeral: true,
