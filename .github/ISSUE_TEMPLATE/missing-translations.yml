@@ -1,0 +1,39 @@
+name: 'Missing Translations'
+description: 'File a report for translations that need to be added'
+title: 'Missing Translation(s)'
+labels: ['translation']
+body:
+  - type: 'input'
+    id: 'pr-number'
+    attributes:
+      label: 'PR #'
+      description: 'The # of the PR that the translations were added in'
+    validations:
+      required: true
+  - type: 'input'
+    id: 'keys'
+    attributes:
+      label: 'Translation Keys'
+      description: 'Comma-separated list of missing translation keys'
+      placeholder: 'title, loading, error'
+    validations:
+      required: true
+  - type: 'dropdown'
+    id: 'missing-locales'
+    attributes:
+      label: 'List of missing locales'
+      multiple: false
+      description: 'Check the locales that are missing translations'
+      options:
+        - 'de'
+        - 'en'
+        - 'es'
+        - 'fr'
+        - 'pt'
+        - 'pt-BR'
+        - 'pt-PT'
+        - 'ru'
+        - 'zh-CN'
+        - 'zh-HK'
+        - 'zh-TW'
+        - 'zh'
