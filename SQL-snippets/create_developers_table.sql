@@ -8,5 +8,6 @@ create table public.developers (
   timezone text NOT NULL,
   twitter text NOT NULL,
   github text NOT NULL,
+  available BOOLEAN NOT NULL DEFAULT FALSE,
   updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
