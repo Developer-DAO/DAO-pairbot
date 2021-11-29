@@ -65,9 +65,9 @@ These are the current commands the bot supports:
 - `/available` - Set yourself as available
 - `/unavailable` - Set yourself as unavailable
 - `/developers all` - List all developers in the paring database 
-- `/developers available` - List all available developers in the pairing database.
-- `/invite` - Invite an available developer to pair up with.
-- `/remove` - Remove yourself from the pairing database.
+- `/developers available` - List all available developers in the pairing database
+- `/invite` - Invite an available developer to pair up with
+- `/remove` - Remove yourself from the pairing database
 
 ## Roadmap
 ## Contributing
