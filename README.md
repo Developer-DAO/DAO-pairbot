@@ -56,9 +56,19 @@ The idea behind the bot is to help people collaborate, learn and in the end make
    SUPABASE_URL=
    SUPABASE_ANON_KEY=
    ```
-   5. Copy the snippets in SQL-snippets and paste in the SQL Editor on Supabase and click run.
+   5. Copy the snippet from SQL-snippets and paste in the SQL Editor on Supabase and click run.
 
 ## Usage
+These are the current commands the bot supports:
+- `/add` - Add yourself to the pairing database
+- `/edit` - Edit your profile on the pairing database
+- `/available` - Set yourself as available
+- `/unavailable` - Set yourself as unavailable
+- `/developers all` - List all developers in the paring database 
+- `/developers available` - List all available developers in the pairing database.
+- `/invite` - Invite an available developer to pair up with.
+- `/remove` - Remove yourself from the pairing database.
+
 ## Roadmap
 ## Contributing
 ## License
