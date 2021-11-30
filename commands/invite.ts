@@ -10,7 +10,8 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     const { options } = interaction;
-    console.log(interaction.createdAt)
+
+    //Can't invite yourself
     if (options.getUser('developer')!.id === interaction.user.id) {
         await interaction.reply({
             content: "Can't invite yourself.",
@@ -20,6 +21,7 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
+    //Fetching invited developer
     const { data, error } = await supabase
     .from('developers')
     .select()
@@ -45,6 +47,50 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
+    //Checking if the person has already been invited
+    const { data: alreadyInvited, error: invitedError } = await supabase
+    .from('invites')
+    .select()
+    .eq('sender_discord_id', interaction.user.id)
+    .eq('receiver_discord_id', options.getUser('developer')?.id)
+
+    if (alreadyInvited!.length !== 0) {
+        await interaction.reply({
+            content: 'User already invited.',
+            ephemeral: true,
+        });
+        return;
+    }
+    
+    if (invitedError != null) {
+        await interaction.reply({
+            content: 'Something went wrong.',
+            ephemeral: true,
+        }); 
+        return;
+    }
+
+    //Recording the invite in the 'invites' table
+    const { error: insertError } = await supabase
+    .from('invites')
+    .insert([
+        {
+            sender_discord_id: interaction.user.id,
+            receiver_discord_id: options.getUser('developer')!.id,
+            created_at: interaction.createdAt,
+        }
+    ])
+
+    if (insertError != null) {
+        await interaction.reply({
+            content: 'Something went wrong.',
+            ephemeral: true,
+        }); 
+
+        return
+    }
+
+    //Getting the inviter record
     const { data: inviterData, error: inviterError } = await supabase
     .from('developers')
     .select()
@@ -89,10 +135,9 @@ export async function execute(interaction: CommandInteraction) {
     .addComponents(new MessageButton()
     .setCustomId(`accept-${interaction.user?.id}`)
     .setLabel('Accept').setStyle('SUCCESS'))
-    
-  
-    
-    options.getUser('developer')?.send({  
+        
+    //Sends private message to user
+    options.getUser('developer')?.send({          
         content: `You have been invited to pair up with ${interaction.user.tag}`,
         embeds: [inviterProfile],
         components: [acceptRow],
