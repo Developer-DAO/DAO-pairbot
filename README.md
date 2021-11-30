@@ -70,6 +70,11 @@ These are the current commands the bot supports:
 - `/remove` - Remove yourself from the pairing database
 
 ## Roadmap
+- [ ] Finish basic features
+- [ ] Add Projects
+- [ ] Add Website Interface
+- [ ] Add User analytics to Website
+- [ ] Add Project analytics to Website
 ## Contributing
 ## License
 ## Contact
