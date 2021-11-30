@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "mbuxmann",
+      "name": "Martin Buxmann",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21178318?v=4",
+      "profile": "http://buxmann.dev",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "DAO-pairbot",
+  "projectOwner": "Developer-DAO",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
