@@ -2,15 +2,17 @@
     "name": "pairingbot",
     "version": "1.0.0",
     "description": "",
+    "license": "ISC",
     "main": "index.js",
+    "engines": {
+        "node": "16.13.0"
+    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon index.ts",
-        "dev-commands": "nodemon deploy-commands.ts"
+        "dev-commands": "nodemon deploy-commands.ts",
+        "build": "tsc"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
     "dependencies": {
         "@discordjs/builders": "^0.8.2",
         "@discordjs/rest": "^0.1.0-canary.0",
