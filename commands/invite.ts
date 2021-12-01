@@ -11,7 +11,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction) {
     const { options } = interaction;
 
-    //Can't invite yourself
+    // Can't invite yourself
     if (options.getUser('developer')!.id === interaction.user.id) {
         await interaction.reply({
             content: "Can't invite yourself.",
@@ -21,7 +21,7 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
-    //Fetching invited developer
+    // Fetching invited developer
     const { data, error } = await supabase
     .from('developers')
     .select()
@@ -47,7 +47,7 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
-    //Checking if the person has already been invited
+    // Checking if the person has already been invited
     const { data: alreadyInvited, error: invitedError } = await supabase
     .from('invites')
     .select()
@@ -70,7 +70,7 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
-    //Recording the invite in the 'invites' table
+    // Recording the invite in the 'invites' table
     const { error: insertError } = await supabase
     .from('invites')
     .insert([
@@ -90,7 +90,7 @@ export async function execute(interaction: CommandInteraction) {
         return
     }
 
-    //Getting the inviter record
+    // Getting the inviter record
     const { data: inviterData, error: inviterError } = await supabase
     .from('developers')
     .select()
@@ -136,7 +136,7 @@ export async function execute(interaction: CommandInteraction) {
     .setCustomId(`accept-${interaction.user?.id}`)
     .setLabel('Accept').setStyle('SUCCESS'))
         
-    //Sends private message to user
+    // Sends private message to user
     options.getUser('developer')?.send({          
         content: `You have been invited to pair up with ${interaction.user.tag}`,
         embeds: [inviterProfile],
