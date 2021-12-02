@@ -67,5 +67,4 @@ export async function execute(interaction: CommandInteraction) {
         pages.push(embedMessage)   
     }
 
-    await paginationEmbed(interaction, pages);
 }
