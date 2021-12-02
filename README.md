@@ -51,16 +51,18 @@ The idea behind the bot is to help people collaborate, learn and in the end make
    ```sh
    cd DAO-pairbot && npm install
    ```
-  3. Create Supabase project.
-  4. Create .env file and fill it out with your details
-   ```
-   DISCORD_TOKEN=
-   GUILD_ID=
-   CLIENT_ID=
-   SUPABASE_URL=
-   SUPABASE_ANON_KEY=
-   ```
-   5. Copy the snippet from SQL-snippets and paste in the SQL Editor on Supabase and click run.
+  3. Create a new Supabase project. We will need the Superbase Url and Anon Key to put in our .env file later.
+  4. Copy the snippet from SQL-snippets and paste in the SQL Editor on Supabase and click run.
+  5. Copy .env.example to .env We will fill it in with your details from Supabase details from before and your Discord details in the next few steps.
+  5. In the discord desktop app, create your own discord server to use for testing.
+  6. Enable Developer mode in your Discord desktop app by going to User Settings > Advanced > Enabled 'Developer Mode'
+  7. Right click on the server name and click Copy ID. This is the Guild Id in .env
+  8. Right click on the 'general' channel and click Copy ID. This is the Discord channel id in .env
+  9. Finally we need to [create a Discord app](https://discord.com/developers/applications) in the Discord developer area. Call it pairapp or something.
+  10. Once you have created the app, get the Application Id. This is on the General information tab and can be used as Client ID in .env.
+  11. Next, click the Bot tab on the left and add a new bot. In this tab there is a Copy and Regenerate button with a link above them to reveal a bot. Click that link and use the revealed token as DISCORD_TOKEN in .env
+  12. Lastly click the OAuth tab and then the sub tab for URL Generator. Select 'bot' and 'application.commands' in the top perms and then a new box will appear, select 'Administrator' in the bottom box. Copy the url into your web browser and then navigate to it, selecting your test Discord server when prompted. This will add the bot to your test server. 
+  
 
 ## Usage
 These are the current commands the bot supports:
