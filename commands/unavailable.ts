@@ -13,7 +13,7 @@ export async function execute(interaction: CommandInteraction) {
         available: false,
         goal: null,     
     }).eq('discord_id', interaction.user.id)
-    console.log(error)
+   
     if (error != null) {
         await interaction.reply({
             content: 'Something went wrong.',

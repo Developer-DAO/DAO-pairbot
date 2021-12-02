@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "license": "ISC",
-    "main": "index.js",
+    "main": "index.ts",
     "engines": {
         "node": "16.13.0"
     },
