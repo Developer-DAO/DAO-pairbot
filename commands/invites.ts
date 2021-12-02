@@ -2,7 +2,6 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
-import { paginationEmbed } from '../components/paginationEmbed';
 
 export const data = new SlashCommandBuilder()
     .setName('invites')
