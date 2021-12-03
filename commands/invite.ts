@@ -13,6 +13,7 @@ export async function execute(interaction: CommandInteraction) {
 
     await interaction.reply({
         content: `Busy inviting ${options.getUser('developer')?.tag}...`,
+        ephemeral: true
     });
 
     // Can't invite yourself
@@ -96,6 +97,10 @@ export async function execute(interaction: CommandInteraction) {
     .eq('sender_discord_id', interaction.user.id)
     .eq('receiver_discord_id', options.getUser('developer')?.id)
     
+    console.log("Invited: ")
+    console.log(alreadyInvited)
+    console.log("Error: ")
+    console.log(invitedError)
     if (invitedError != null) {
         await interaction.editReply({
             content: 'Something went wrong.',
