@@ -11,7 +11,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: CommandInteraction) {
     const { options } = interaction;
 
-    await interaction.editReply({
+    await interaction.reply({
         content: `Busy inviting ${options.getUser('developer')?.tag}...`,
     });
 
