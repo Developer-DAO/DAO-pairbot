@@ -13,6 +13,7 @@ export async function execute(interaction: CommandInteraction) {
 
     await interaction.reply({
         content: `Busy inviting ${options.getUser('developer')?.tag}...`,
+        ephemeral: true
     });
 
     // Can't invite yourself
