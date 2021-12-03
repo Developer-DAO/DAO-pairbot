@@ -31,11 +31,15 @@ export async function execute(interaction: CommandInteraction) {
     ])
 
     if (error != null) {
+        var content = 'Something went wrong.';
+        if (error.code === '22001') {
+            content = 'Value is too long.'
+        }
+        
         await interaction.reply({
-            content: 'Something went wrong.',
+            content: content,
             ephemeral: true,
         }); 
-
         return
     }
 
