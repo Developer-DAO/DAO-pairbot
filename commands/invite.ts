@@ -13,19 +13,54 @@ export async function execute(interaction: CommandInteraction) {
 
     await interaction.reply({
         content: `Busy inviting ${options.getUser('developer')?.tag}...`,
-        ephemeral: true
     });
 
     // Can't invite yourself
     if (options.getUser('developer')!.id === interaction.user.id) {
         await interaction.editReply({
-            content: "Can't invite yourself."
+            content: "Can't invite yourself.",
         }); 
 
         return;
     }
 
-    // Fetching invited developer
+    //Checking inviter
+    const { data: inviterData, error: inviterError } = await supabase
+    .from('developers')
+    .select()
+    .eq('discord_id', interaction.user.id)
+
+    if (inviterError != null) {
+        await interaction.editReply({
+            content: 'Something went wrong.',
+        }); 
+        return;
+    }
+
+    //Inviter not in the developers table
+    if (inviterData?.length === 0) {
+        await interaction.editReply({
+            content: '/Add yourself and make yourself /available before inviting someone to pair with you!',
+        });
+        return;
+    }
+
+    //Become available if not
+    if (!inviterData![0].available) {
+        const { error: updateError } = await supabase
+        .from('developers')
+        .update({ available: true })
+        .eq('discord_id', interaction.user.id)
+
+        if (updateError == null) {
+            await interaction.editReply({
+                content: 'Something went wrong.',
+            }); 
+            return;
+        }
+    }
+
+    // Checking invited developer availability
     const { data, error } = await supabase
     .from('developers')
     .select()
@@ -39,13 +74,18 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
-    const {available} = data![0]
+    //Invited not in the developers table
+    if (data?.length === 0) {
+        await interaction.editReply({
+            content: 'The developer is not in the pairing sheet.',
+        });
+        return;
+    }
 
-    if (available === false) {
+    if (!data![0].available) {
         await interaction.editReply({
             content: 'The developer is not available.',
         }); 
-
         return;
     }
 
@@ -55,14 +95,6 @@ export async function execute(interaction: CommandInteraction) {
     .select()
     .eq('sender_discord_id', interaction.user.id)
     .eq('receiver_discord_id', options.getUser('developer')?.id)
-
-  
-    if (alreadyInvited!.length !== 0) {
-        await interaction.editReply({
-            content: `${options.getUser('developer')?.tag} already invited.`,
-        });
-        return;
-    }
     
     if (invitedError != null) {
         await interaction.editReply({
@@ -70,20 +102,12 @@ export async function execute(interaction: CommandInteraction) {
         }); 
         return;
     }
-
- 
-    // Getting the inviter's record
-    const { data: inviterData, error: inviterError } = await supabase
-    .from('developers')
-    .select()
-    .eq('discord_id', interaction.user?.id)
-
-    if (inviterError != null) {
+    
+    if (alreadyInvited!.length !== 0) {
         await interaction.editReply({
-            content: 'Something went wrong.',
-        }); 
-
-        return
+            content: 'User already invited.',
+        });
+        return;
     }
 
     const { 
