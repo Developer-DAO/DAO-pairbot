@@ -21,9 +21,9 @@ create table public.invites (
   created_at timestamp NOT NULL,
   unique (sender_discord_id, receiver_discord_id),
   constraint fk_sender_discord_id
-    foreign key (sender_discord_id) 
-      references developers(discord_id),
+    foreign key (sender_discord_id)
+      references developers(discord_id) on delete cascade,
   constraint fk_receiver_discord_id
     foreign key (receiver_discord_id) 
-      references developers(discord_id)
+      references developers(discord_id) on delete cascade
 )
