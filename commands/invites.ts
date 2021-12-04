@@ -13,22 +13,38 @@ export async function execute(interaction: CommandInteraction) {
         ephemeral: true
     })
 
-    const { data } = await supabase
+    const { data, error } = await supabase
     .from('invites')
     .select('sender_discord_id, message_id')
     .eq('receiver_discord_id', interaction.user.id)
+
+    if (error != null) {
+        await interaction.editReply({
+            content: 'Something went wrong.'
+        }); 
+
+        return
+    }
+
+    if (data!.length === 0) {
+        await interaction.editReply({
+            content: 'You have no pending invites.'
+        });
+        
+        return
+    }
 
     let pages = [];
     let senderDiscordIds = []; // discord ids of all those who sent an invite
     for (const invite of data!) {
 
         // Getting the inviter's record
-        const { data: inviterData, error: inviterError } = await supabase
+        const { data, error } = await supabase
         .from('developers')
         .select()
         .eq('discord_id', invite.sender_discord_id)
 
-        if (inviterError != null) {
+        if (error != null) {
             await interaction.editReply({
                 content: 'Something went wrong.'
             }); 
@@ -36,38 +52,43 @@ export async function execute(interaction: CommandInteraction) {
             return
         }
 
+        // Return if no invites were found
+        if (data!.length === 0) await interaction.editReply({
+            content: 'You have no invites.'
+        })
+
         const { 
-            discord_id: inviterDiscordId,
-            timezone: inviterTimezone,
-            discord: inviterDiscord, 
-            skills:inviterSkills, 
-            desired_skills: inviterDesiredSkills, 
-            goal: inviterGoal,
-            position: inviterPosition, 
-            twitter: inviterTwitter, 
-            github: inviterGithub,
-            available: inviterAvailable } = inviterData![0]
+            discord_id,
+            timezone,
+            discord, 
+            position, 
+            skills, 
+            desired_skills, 
+            goal,
+            available,
+            github,
+            twitter
+        } = data![0]
     
-        const user = await client.users?.fetch(inviterDiscordId);
+        const user = await client.users?.fetch(discord_id);
         senderDiscordIds.push(user.id);
 
         const embedMessage = new MessageEmbed()
         .setColor('#0099ff')
-        .setTitle(`${inviterDiscord.charAt(0).toUpperCase() + inviterDiscord.slice(1)}'s profile`)
+        .setTitle(`${discord.charAt(0).toUpperCase() + discord.slice(1)}'s profile`)
         .setThumbnail(user.avatarURL() ?? user.defaultAvatarURL)
-        .setDescription(inviterPosition)
+        .setDescription(position)
         .addFields(
-            {name: 'Skills', value: inviterSkills}, 
-            {name: 'Desired Skills', value: inviterDesiredSkills},
-            {name: 'Goal', value: inviterGoal ?? "none"},
-            {name: 'Available', value: inviterAvailable ? 'True' : 'False', inline: true},
-            {name: '\u200b', value: '\u200b', inline: true},
-            {name: 'Timezone', value: inviterTimezone, inline: true},
-            {name: 'Github', value: `__[github.com/${inviterGithub}](https://github.com/${inviterGithub})__`, inline: true},
-            {name: 'Twitter', value: `__[twitter.com/${inviterTwitter}](https://twitter.com/${inviterTwitter})__`, inline: true},
+            {name: 'Available', value: available ? 'True' : 'False'},
+            {name: 'Timezone', value: timezone},
+            {name: 'Skills', value: skills}, 
+            {name: 'Desired Skills', value: desired_skills},
+            {name: 'Goal', value: goal ?? "none"},
+            {name: 'Github', value: `__[github.com/${github}](https://github.com/${github})__`, inline: true},
+            {name: 'Twitter', value: `__[twitter.com/${twitter}](https://twitter.com/${twitter})__`, inline: true},
         )
     
-        pages.push(embedMessage)   
+        pages.push(embedMessage)  
     }
 
     paginationEmbed(interaction, pages, senderDiscordIds);

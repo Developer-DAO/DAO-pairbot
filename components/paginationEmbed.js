@@ -5,12 +5,7 @@ const { client } = require("../index");
 var starNames = require("@frekyll/star-names");
 dotenv.config();
 
-const paginationEmbed = async (
-  interaction,
-  pages,
-  senderDiscordIds,
-  timeout = 1200
-) => {
+const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
   if (!pages) throw new Error("Pages are not given.");
   let page = 0;
 
@@ -29,7 +24,12 @@ const paginationEmbed = async (
     .setLabel("Accept")
     .setStyle("SUCCESS");
 
-  const buttonList = [nextButton, previousButton, acceptButton];
+  const declineButton = new MessageButton()
+    .setCustomId("decline-invite")
+    .setLabel("Decline")
+    .setStyle("DANGER");
+
+  const buttonList = [nextButton, previousButton, acceptButton, declineButton];
 
   const row = new MessageActionRow().addComponents(buttonList);
 
@@ -42,14 +42,17 @@ const paginationEmbed = async (
   const filter = (i) =>
     i.customId === buttonList[0].customId ||
     i.customId === buttonList[1].customId ||
-    i.customId === buttonList[2].customId;
+    i.customId === buttonList[2].customId ||
+    i.customId === buttonList[3].customId;
 
   const collector = await curPage.createMessageComponentCollector({
     filter,
-    time: timeout,
+    time: 120000,
   });
 
   collector.on("collect", async (i) => {
+    const inviter = senderDiscordIds[page];
+    const invitee = interaction.user.id;
     switch (i.customId) {
       case buttonList[0].customId:
         page = page > 0 ? --page : pages.length - 1;
@@ -59,8 +62,7 @@ const paginationEmbed = async (
         break;
       case buttonList[2].customId:
         const discordChannel = process.env.DISCORD_CHANNEL_ID;
-        const inviter = senderDiscordIds[page];
-        const invitee = interaction.user.id;
+
         const parentChannel = client.channels.cache.get(discordChannel);
         parentChannel.threads
           .create({
@@ -84,7 +86,6 @@ const paginationEmbed = async (
                 content: "Something went wrong.",
                 ephemeral: true,
               });
-
               return;
             }
 
@@ -94,7 +95,7 @@ const paginationEmbed = async (
               content: `${interaction.user.tag} has accepted your invite!`,
             });
 
-            await interaction.editReply({
+            await interaction.followUp({
               content: "Invitation successfully accepted!",
             });
           })
@@ -104,6 +105,26 @@ const paginationEmbed = async (
               content: "Something went wrong",
             });
           });
+        break;
+      case buttonList[3].customId:
+        const { error } = await supabase
+          .from("invites")
+          .delete()
+          .eq("sender_discord_id", inviter)
+          .eq("receiver_discord_id", invitee);
+
+        if (error != null) {
+          await interaction.editReply({
+            content: "Something went wrong.",
+            ephemeral: true,
+          });
+
+          return;
+        }
+
+        await interaction.followUp({
+          content: "Invitation successfully declined!",
+        });
         break;
       default:
         break;
