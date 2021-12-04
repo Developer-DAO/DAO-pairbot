@@ -2,15 +2,17 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
+const paginationEmbed = require('../components/paginationEmbed.js')
 
 export const data = new SlashCommandBuilder()
     .setName('invites')
     .setDescription('List invites that you have received')
 
 export async function execute(interaction: CommandInteraction) {
-    await interaction.deferReply({
-        ephemeral: true
-    });
+    await interaction.user.send({ 
+        content: 'test'
+    })
+   
 
     const { data, error } = await supabase
     .from('invites')
@@ -29,7 +31,7 @@ export async function execute(interaction: CommandInteraction) {
 
         if (inviterError != null) {
             await interaction.editReply({
-                content: 'Something went wrong.',
+                content: 'Something went wrong.'
             }); 
 
             return
@@ -68,4 +70,5 @@ export async function execute(interaction: CommandInteraction) {
         pages.push(embedMessage)   
     }
 
+    paginationEmbed(interaction, pages);
 }
