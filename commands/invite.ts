@@ -132,9 +132,10 @@ export async function execute(interaction: CommandInteraction) {
         {name: 'Desired Skills', value: inviterDesiredSkills},
         {name: 'Goal', value: inviterGoal ?? "none"},
         {name: 'Available', value: inviterAvailable ? 'True' : 'False', inline: true},
+        {name: '\u200b', value: '\u200b', inline: true},
         {name: 'Timezone', value: inviterTimezone, inline: true},
-        {name: 'Github', value: `https://github.com/${inviterGithub}`, inline: true},
-        {name: 'Twitter', value: `https://twitter.com/${inviterTwitter}`, inline: true},
+        {name: 'Github', value: `__[github.com/${inviterGithub}](https://github.com/${inviterGithub})__`, inline: true},
+        {name: 'Twitter', value: `__[twitter.com/${inviterTwitter}](https://twitter.com/${inviterTwitter})__`, inline: true},
     )
 
     const acceptButton = new MessageButton()

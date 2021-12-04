@@ -59,9 +59,10 @@ export async function execute(interaction: CommandInteraction) {
         {name: 'Desired Skills', value: desired_skills},
         {name: 'Goal', value: goal ?? "none"},
         {name: 'Available', value: available ? 'True' : 'False', inline: true},
+        {name: '\u200b', value: '\u200b', inline: true},
         {name: 'Timezone', value: timezone, inline: true},
-        {name: 'Github', value: `https://github.com/${github}`, inline: true},
-        {name: 'Twitter', value: `https://twitter.com/${twitter}`, inline: true},
+        {name: 'Github', value: `__[github.com/${github}](https://github.com/${github})__`, inline: true},
+        {name: 'Twitter', value: `__[twitter.com/${twitter}](https://twitter.com/${twitter})__`, inline: true},
     )
 
     const inviteRow = new MessageActionRow()
