@@ -1,7 +1,7 @@
 import { Intents, Collection} from 'discord.js';
 import { discordClient } from './utils/classes';
 import dotenv from 'dotenv';
-
+import Scheduler from './utils/scheduledJobs'
 dotenv.config()
 
 const botToken = process.env.DISCORD_TOKEN
@@ -12,7 +12,4 @@ client.commands = new Collection();
 client.loadCommandsToClient();
 client.loadEventsToClient();
 client.login(botToken);
-
-
-
-
+Scheduler()
