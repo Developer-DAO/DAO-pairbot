@@ -2,23 +2,24 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
+const paginationEmbed = require('../components/paginationEmbed.js')
 
 export const data = new SlashCommandBuilder()
     .setName('invites')
     .setDescription('List invites that you have received')
 
 export async function execute(interaction: CommandInteraction) {
-    await interaction.deferReply({
+    await interaction.deferReply({ 
         ephemeral: true
-    });
+    })
 
-    const { data, error } = await supabase
+    const { data } = await supabase
     .from('invites')
     .select('sender_discord_id, message_id')
     .eq('receiver_discord_id', interaction.user.id)
 
     let pages = [];
-    
+    let senderDiscordIds = []; // discord ids of all those who sent an invite
     for (const invite of data!) {
 
         // Getting the inviter's record
@@ -29,7 +30,7 @@ export async function execute(interaction: CommandInteraction) {
 
         if (inviterError != null) {
             await interaction.editReply({
-                content: 'Something went wrong.',
+                content: 'Something went wrong.'
             }); 
 
             return
@@ -48,7 +49,8 @@ export async function execute(interaction: CommandInteraction) {
             available: inviterAvailable } = inviterData![0]
     
         const user = await client.users?.fetch(inviterDiscordId);
-      
+        senderDiscordIds.push(user.id);
+
         const embedMessage = new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`${inviterDiscord.charAt(0).toUpperCase() + inviterDiscord.slice(1)}'s profile`)
@@ -68,4 +70,6 @@ export async function execute(interaction: CommandInteraction) {
         pages.push(embedMessage)   
     }
 
+    paginationEmbed(interaction, pages, senderDiscordIds);
+   
 }

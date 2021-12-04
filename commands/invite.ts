@@ -176,4 +176,6 @@ export async function execute(interaction: CommandInteraction) {
     await interaction.editReply({
         content: `Successfully invited ${options.getUser('developer')?.tag}!`,
     });
+
+    
 }
