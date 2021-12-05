@@ -1,8 +1,8 @@
-const dotenv = require("dotenv");
 const { MessageActionRow, MessageButton } = require("discord.js");
 const { supabase } = require("../database");
 const { client } = require("../index");
 var starNames = require("@frekyll/star-names");
+const dotenv = require("dotenv");
 dotenv.config();
 
 const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
@@ -61,9 +61,9 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
         page = page + 1 < pages.length ? ++page : 0;
         break;
       case buttonList[2].customId:
-        const discordChannel = process.env.DISCORD_CHANNEL_ID;
-
-        const parentChannel = client.channels.cache.get(discordChannel);
+        const parentChannel = client.channels.cache.get(
+          process.env.DISCORD_CHANNEL_ID
+        );
         parentChannel.threads
           .create({
             name: `${starNames.random()}`,
