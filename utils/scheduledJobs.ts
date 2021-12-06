@@ -3,7 +3,7 @@ import { supabase } from '../database'
 import moment from 'moment';
 import { client } from '../index';
 import dotenv from 'dotenv'
-import { TextBasedChannel, TextChannel, ThreadManager } from 'discord.js';
+import { TextChannel,} from 'discord.js';
 
 dotenv.config();
 
