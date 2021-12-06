@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction } from 'discord.js';
 import { supabase } from '../database';
+import { generateDevelopersPaginator } from '../components/developersPaginator';
 let AsciiTable = require('ascii-table')
 
 export const data = new SlashCommandBuilder()
@@ -33,22 +34,6 @@ export async function execute(interaction: CommandInteraction) {
         return
     }
 
-    // create developer table
-    let developerTable = new AsciiTable('Developers')
-    developerTable
-        .setHeading('', 'Discord', 'Available', 'Goal')  
-
-    // loop through the data and add developer to table
-    for (let i = 0; i < data!.length; i++) {
-        const {discord, available, goal} = data![i];
-        developerTable.addRow(i, discord, available, goal ? goal : "none");
-    }
-
-    // convert table into a codeblock
-    const message = "\n ```" + developerTable.toString() + "```";
-
-    await interaction.reply({
-        content: message,
-        ephemeral: true,
-    });   
+    //Create developer embed + pagination
+    await generateDevelopersPaginator(interaction, data!);
 }
