@@ -3,7 +3,7 @@ import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
 import { createDeveloperEmbed } from '../utils/developerEmbed';
-const paginationEmbed = require('../components/paginationEmbed.js')
+const invitesPaginator = require('../components/invitesPaginator.js')
 
 export const data = new SlashCommandBuilder()
     .setName('invites')
@@ -57,19 +57,6 @@ export async function execute(interaction: CommandInteraction) {
         if (data!.length === 0) await interaction.editReply({
             content: 'You have no invites.'
         })
-
-        const { 
-            discord_id,
-            timezone,
-            discord, 
-            position, 
-            skills, 
-            desired_skills, 
-            goal,
-            available,
-            github,
-            twitter
-        } = data![0]
     
         const user = await client.users?.fetch(data![0].discord_id);
         senderDiscordIds.push(user.id);
@@ -78,6 +65,6 @@ export async function execute(interaction: CommandInteraction) {
         pages.push(embedMessage)  
     }
 
-    paginationEmbed(interaction, pages, senderDiscordIds);
+    invitesPaginator(interaction, pages, senderDiscordIds);
    
 }
