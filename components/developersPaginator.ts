@@ -1,5 +1,6 @@
 import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
 import { client } from '../index';
+import { createDeveloperEmbed } from '../utils/developerEmbed';
 
 export async function generateDevelopersPaginator(interaction: any, developers: any[]) {
   let page = 0;
@@ -138,21 +139,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
 async function _resolveCurrentEmbed(developers: any[], devIndex = 0) {
   let selectedDeveloper: any = developers!.find((value, index, array) => index === devIndex);
   let selectedDevId = await client.users.fetch(selectedDeveloper.discord_id);
-  let embed = new MessageEmbed()
-	.setColor('#0099ff')
-	.setTitle(`${selectedDeveloper.discord.charAt(0).toUpperCase() + selectedDeveloper.discord.slice(1)}'s profile`)
-	.setThumbnail(selectedDevId.avatarURL() ?? selectedDevId.defaultAvatarURL)
-	.setDescription(selectedDeveloper.position)
-  .addFields(
-      {name: 'Skills', value: selectedDeveloper.skills}, 
-      {name: 'Desired Skills', value: selectedDeveloper.desired_skills},
-      {name: 'Goal', value: selectedDeveloper.goal ?? "none"},
-      {name: 'Available', value: selectedDeveloper.available ? 'True' : 'False', inline: true},
-      {name: '\u200b', value: '\u200b', inline: true},
-      {name: 'Timezone', value: selectedDeveloper.timezone, inline: true},
-      {name: 'Github', value: `__[github.com/${selectedDeveloper.github}](https://github.com/${selectedDeveloper.github})__`, inline: true},
-      {name: 'Twitter', value: `__[twitter.com/${selectedDeveloper.twitter}](https://twitter.com/${selectedDeveloper.twitter})__`, inline: true},
-  )
+  let embed = createDeveloperEmbed(selectedDevId.avatarURL() ?? selectedDevId.defaultAvatarURL, selectedDeveloper);
   return embed;   
 }
 
