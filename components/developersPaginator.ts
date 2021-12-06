@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
 import { client } from '../index';
 import { createDeveloperEmbed } from '../utils/developerEmbed';
 
@@ -7,7 +7,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
   const PAGE_RECORDS = 25;
 
   let totalDevelopers = developers!.length;
-  const getCurrentPageDevs = (page: number): any[] => developers!.filter((elem, index, array) => {
+  const getCurrentPageDevs = (page: number): any[] => developers!.filter((_, index) => {
     return index >= page * PAGE_RECORDS && index < page * PAGE_RECORDS + PAGE_RECORDS;
   })
 
@@ -137,7 +137,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
 
 //Builds the embed of the current selected developer
 async function _resolveCurrentEmbed(developers: any[], devIndex = 0) {
-  let selectedDeveloper: any = developers!.find((value, index, array) => index === devIndex);
+  let selectedDeveloper: any = developers!.find((_, index) => index === devIndex);
   let selectedDevId = await client.users.fetch(selectedDeveloper.discord_id);
   let embed = createDeveloperEmbed(selectedDevId.avatarURL() ?? selectedDevId.defaultAvatarURL, selectedDeveloper);
   return embed;   
