@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import { supabase } from "../database";
+import { createDeveloperEmbed } from '../utils/developerEmbed';
 
 export const data = new SlashCommandBuilder()
   .setName('invite')
@@ -111,32 +112,7 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
-    const { 
-        timezone: inviterTimezone,
-        discord: inviterDiscord, 
-        skills:inviterSkills, 
-        desired_skills: inviterDesiredSkills, 
-        goal: inviterGoal,
-        position: inviterPosition, 
-        twitter: inviterTwitter, 
-        github: inviterGithub,
-        available: inviterAvailable } = inviterData![0]
-
-    const inviterProfile = new MessageEmbed()
-	.setColor('#0099ff')
-	.setTitle(`${inviterDiscord.charAt(0).toUpperCase() + inviterDiscord.slice(1)}'s profile`)
-	.setThumbnail(interaction.user?.avatarURL()!)
-	.setDescription(inviterPosition)
-    .addFields(
-        {name: 'Skills', value: inviterSkills}, 
-        {name: 'Desired Skills', value: inviterDesiredSkills},
-        {name: 'Goal', value: inviterGoal ?? "none"},
-        {name: 'Available', value: inviterAvailable ? 'True' : 'False', inline: true},
-        {name: '\u200b', value: '\u200b', inline: true},
-        {name: 'Timezone', value: inviterTimezone, inline: true},
-        {name: 'Github', value: `__[github.com/${inviterGithub}](https://github.com/${inviterGithub})__`, inline: true},
-        {name: 'Twitter', value: `__[twitter.com/${inviterTwitter}](https://twitter.com/${inviterTwitter})__`, inline: true},
-    )
+    const inviterProfile = createDeveloperEmbed(interaction.user?.avatarURL()!, inviterData![0])
 
     const acceptButton = new MessageButton()
     .setCustomId(`accept`)

@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
+import { createDeveloperEmbed } from '../utils/developerEmbed';
 const paginationEmbed = require('../components/paginationEmbed.js')
 
 export const data = new SlashCommandBuilder()
@@ -70,24 +71,10 @@ export async function execute(interaction: CommandInteraction) {
             twitter
         } = data![0]
     
-        const user = await client.users?.fetch(discord_id);
+        const user = await client.users?.fetch(data![0].discord_id);
         senderDiscordIds.push(user.id);
 
-        const embedMessage = new MessageEmbed()
-        .setColor('#0099ff')
-        .setTitle(`${discord.charAt(0).toUpperCase() + discord.slice(1)}'s profile`)
-        .setThumbnail(user.avatarURL() ?? user.defaultAvatarURL)
-        .setDescription(position)
-        .addFields(
-            {name: 'Available', value: available ? 'True' : 'False'},
-            {name: 'Timezone', value: timezone},
-            {name: 'Skills', value: skills}, 
-            {name: 'Desired Skills', value: desired_skills},
-            {name: 'Goal', value: goal ?? "none"},
-            {name: 'Github', value: `__[github.com/${github}](https://github.com/${github})__`, inline: true},
-            {name: 'Twitter', value: `__[twitter.com/${twitter}](https://twitter.com/${twitter})__`, inline: true},
-        )
-    
+        const embedMessage = createDeveloperEmbed(user.avatarURL() ?? user.defaultAvatarURL, data![0])
         pages.push(embedMessage)  
     }
 
