@@ -163,7 +163,7 @@ function _constructDeveloperOptions(developers: any): any[] {
   developers.forEach((dev: { discord: string, discord_id: string, available: boolean, timezone: string }) => {
       developerOptions.push({
       label: `#${`${developers.indexOf(dev)}`.padStart(4, '0')}  -  ${dev.discord}`,
-      description: `Available: ${dev.available} - Timezone: ${dev.timezone}`,
+      description: `Available: ${dev.available ? '✅' : '❌'} - Timezone: ${dev.timezone.toUpperCase()}`,
       value: dev.discord_id,
     });
   });
