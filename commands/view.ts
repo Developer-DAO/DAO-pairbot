@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { supabase } from '../database';
-import { createDeveloperEmbed } from '../utils/developerEmbed';
+import { createDeveloperEmbed } from '../components/developerEmbed';
 
 export const data = new SlashCommandBuilder()
   .setName('view')
