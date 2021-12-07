@@ -3,7 +3,7 @@ import { CommandInteraction } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
 import { createDeveloperEmbed } from '../components/developerEmbed';
-const paginationEmbed = require('../components/paginationEmbed.js')
+const invitesPaginator = require('../components/invitesPaginator.js')
 
 export const data = new SlashCommandBuilder()
     .setName('invites')
@@ -65,6 +65,6 @@ export async function execute(interaction: CommandInteraction) {
         pages.push(embedMessage)  
     }
 
-    paginationEmbed(interaction, pages, senderDiscordIds);
+    invitesPaginator(interaction, pages, senderDiscordIds);
    
 }

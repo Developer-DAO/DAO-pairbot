@@ -226,7 +226,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
 
 //Builds the embed of the current selected developer
 async function _resolveCurrentEmbed(developers: any[], devIndex = 0) {
-  let selectedDeveloper: any = developers!.find((value, index, array) => index === devIndex);
+  let selectedDeveloper: any = developers!.find((_, index) => index === devIndex);
   let selectedDevId = await client.users.fetch(selectedDeveloper.discord_id);
   let embed = createDeveloperEmbed(selectedDevId.avatarURL() ?? selectedDevId.defaultAvatarURL, selectedDeveloper);
   return embed;   
