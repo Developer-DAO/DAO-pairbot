@@ -33,6 +33,16 @@ export async function execute(interaction: CommandInteraction) {
 
         return
     }
+    
+    //No developers
+    if (data?.length === 0) {
+        await interaction.reply({
+            content: 'No developers found!',
+            ephemeral: true,
+        }); 
+
+        return
+    }
 
     //Create developer embed + pagination
     await generateDevelopersPaginator(interaction, data!);
