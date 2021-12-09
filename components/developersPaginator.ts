@@ -159,7 +159,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
       }
     }
 
-    if (i.isMessageComponent()){
+    if (i.isButton()){
       switch (i.customId) {
         case buttonList[0].customId:
           page = 0;
@@ -173,7 +173,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
         case buttonList[3].customId:
           page = getMaxPages() - 1;
           break; 
-        }
+      }
       selectMenu.options = _constructDeveloperOptions(getCurrentPageDevs(page))
       selectMenu.placeholder = embed.title!.includes("No developers found for the current filter") ? 
         menuPlaceholder(null, page) :
