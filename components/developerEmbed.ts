@@ -14,7 +14,7 @@ export function createDeveloperEmbed(avatarURL: any, dev: any) : MessageEmbed {
         {name: 'Available', value: dev.available ? '✅' : '❌', inline: true},
         {name: '\u200b', value: '\u200b', inline: true},
         {name: 'Timezone', value: dev.timezone.toUpperCase(), inline: true},
-        {name: 'Github', value: `__[github.com/${dev.github}](https://github.com/${dev.github})__`, inline: true},
-        {name: 'Twitter', value: `__[twitter.com/${dev.twitter}](https://twitter.com/${dev.twitter})__`, inline: true},
+        {name: 'Github', value: `__[${dev.github}](https://github.com/${dev.github})__`, inline: true},
+        {name: 'Twitter', value: `__[${dev.twitter}](https://twitter.com/${dev.twitter})__`, inline: true},
     )
 }
