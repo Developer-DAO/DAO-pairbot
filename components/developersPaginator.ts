@@ -34,7 +34,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
 
   const getMaxPages = () : number => {
     let maxDeveloperSelections = Math.floor(getDevsByFilter(currentFilter).length / PAGE_RECORDS);
-    if (getDevsByFilter(currentFilter).length % PAGE_RECORDS > 0) maxDeveloperSelections += 1;
+    if (getDevsByFilter(currentFilter).length % PAGE_RECORDS >= 0) maxDeveloperSelections += 1;
     return maxDeveloperSelections;
   }
   //Initializing settings ----- start
@@ -43,12 +43,14 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
   const developerSelectOptions = _constructDeveloperOptions(getCurrentPageDevs(page))
   const filterSelectOptions = _constructFilterOptions()
 
+  let bFirstDevNotFound = false
   let embed: MessageEmbed;
   if (getCurrentPageDevs(page).length !== 0) {
     embed = await _resolveCurrentEmbed(getCurrentPageDevs(page), 0)
   } else {
+    bFirstDevNotFound = true;
     embed = new MessageEmbed()
-    .setTitle(`No developers found for the current filter: ${currentFilter}`)
+    .setTitle(`No developers found for the current filter: ${currentFilter.toUpperCase()}`)
     .setDescription('----------------------------------------------')
   }
   
@@ -69,7 +71,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
   .setMaxValues(1);
 
   let selectMenu = new MessageSelectMenu()
-  .setPlaceholder(menuPlaceholder(developers![0].discord, page))
+  .setPlaceholder(bFirstDevNotFound ? menuPlaceholder(null, page) : menuPlaceholder(getCurrentPageDevs(page)[0].discord, page))
   .setOptions(developerSelectOptions)
   .setCustomId('developer-list')
   .setMinValues(1)
@@ -131,7 +133,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
   collector.on("collect", async (i: any) => {
     if (i.isSelectMenu()) {
       switch (i.customId) {
-        
+
         //filterMenu
         case filterMenu.customId:
           if (currentFilter != i.values[0]) {
@@ -141,10 +143,10 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
           selectMenu.options = _constructDeveloperOptions(getCurrentPageDevs(page))
           filterMenu.placeholder = filterPlaceholder(currentFilter);
           if (getCurrentPageDevs(page).length === 0) {
-            selectMenu.placeholder = `No developers found!`
             filterMenu.placeholder = filterPlaceholder(currentFilter + ' - No developers found!')
           }
           firstRow.components = [filterMenu];
+          secondRow.components = [selectMenu]
           break;
         
         //selectMenu
@@ -252,7 +254,7 @@ function _constructFilterOptions(): any[] {
   
   for (let type in filterTypes)
     filterOptions.push({
-      label: `${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`,
+      label: `${type}`,
       description: type === 'AVAILABLE' ? `✅` : `*`,
       value: `${type}`,
     });
