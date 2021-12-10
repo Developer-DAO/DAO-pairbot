@@ -3,6 +3,7 @@ import { MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
 import { skills } from '../components/skills';
 import { supabase } from '../database';
 import { createDeveloperEmbed } from '../components/developerEmbed';
+import { validateTwitterHandle, validateGithubHandle } from '../utils/'; 
 
 export const data = new SlashCommandBuilder()
   .setName('add')
@@ -31,7 +32,7 @@ export async function execute(interaction: any) {
     if (data!.length > 0) {
         await interaction.reply({
             content: 'You have already added yourself!',
-            ephemeral: true,
+            ephemeral: true
         }); 
         return;
     }
@@ -68,7 +69,6 @@ export async function execute(interaction: any) {
         ephemeral: true,
         fetchReply: true
     });
-
     const filter = (i: any) => 
     i.customId === skillsMenu.customId ||
     i.customId === desiredSkillsMenu.customId ||
@@ -82,7 +82,7 @@ export async function execute(interaction: any) {
     let selectedSkills: any;
     let selectedDesiredSkills: any;
 
-    //Starts on listening for button component clicks
+    // Starts on listening for button component clicks
     collector.on("collect", async (i: any) => {
 
         if (i.isSelectMenu()) {
@@ -119,8 +119,8 @@ export async function execute(interaction: any) {
                         skills: selectedSkills,
                         desired_skills: selectedDesiredSkills,
                         timezone: options.getString('timezone'),
-                        twitter: options.getString('twitter'),
-                        github: options.getString('github')
+                        twitter: validateTwitterHandle(options.getString('twitter')),
+                        github: validateGithubHandle(options.getString('github'))
                     }
                 ])
     
