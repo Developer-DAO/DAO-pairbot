@@ -34,7 +34,7 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
 
   const getMaxPages = () : number => {
     let maxDeveloperSelections = Math.floor(getDevsByFilter(currentFilter).length / PAGE_RECORDS);
-    if (getDevsByFilter(currentFilter).length % PAGE_RECORDS >= 0) maxDeveloperSelections += 1;
+    if (getDevsByFilter(currentFilter).length % PAGE_RECORDS > 0) maxDeveloperSelections += 1;
     return maxDeveloperSelections;
   }
   //Initializing settings ----- start
@@ -43,35 +43,35 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
   const developerSelectOptions = _constructDeveloperOptions(getCurrentPageDevs(page))
   const filterSelectOptions = _constructFilterOptions()
 
-  let bFirstDevNotFound = false
+  let bEmbedNotFound = false
   let embed: MessageEmbed;
   if (getCurrentPageDevs(page).length !== 0) {
     embed = await _resolveCurrentEmbed(getCurrentPageDevs(page), 0)
   } else {
-    bFirstDevNotFound = true;
+    bEmbedNotFound = true;
     embed = new MessageEmbed()
     .setTitle(`No developers found for the current filter: ${currentFilter.toUpperCase()}`)
     .setDescription('----------------------------------------------')
   }
   
-  let menuPlaceholder = (discordTag: string | null, page: number) => 
+  let setMenuPlaceholder = (discordTag: string | null, page: number) => 
     discordTag != null ? 
-    `Currently viewing ${discordTag} - page ${page + 1} of ${getMaxPages()}` :
+    `Currently viewing ${discordTag.charAt(0).toUpperCase() + discordTag.slice(1)} - page ${page + 1} of ${getMaxPages()}` :
     `Select a developer!`
 
-  let filterPlaceholder = (filter: string | null) => {
+  let setFilterPlaceholder = (filter: string | null) => {
     return filter != null ? `Filtered by ${filter}` : `Filtered by AVAILABLE`
   }
     
   let filterMenu = new MessageSelectMenu()
-  .setPlaceholder(filterPlaceholder(null))
+  .setPlaceholder(setFilterPlaceholder(null))
   .setOptions(filterSelectOptions)
   .setCustomId('developer-list-filters')
   .setMinValues(1)
   .setMaxValues(1);
 
   let selectMenu = new MessageSelectMenu()
-  .setPlaceholder(bFirstDevNotFound ? menuPlaceholder(null, page) : menuPlaceholder(getCurrentPageDevs(page)[0].discord, page))
+  .setPlaceholder(bEmbedNotFound ? setMenuPlaceholder(null, page) : setMenuPlaceholder(getCurrentPageDevs(page)[0].discord, page))
   .setOptions(developerSelectOptions)
   .setCustomId('developer-list')
   .setMinValues(1)
@@ -136,14 +136,15 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
 
         //filterMenu
         case filterMenu.customId:
-          if (currentFilter != i.values[0]) {
-            page = 0;
-          }
+          let oldFilter = currentFilter;
           currentFilter = i.values[0];
+          if (oldFilter != currentFilter) {
+            selectMenu.placeholder = bEmbedNotFound ? setMenuPlaceholder(null, page) : setMenuPlaceholder(embed.title!.replace("'s profile", ""), page)
+          }
           selectMenu.options = _constructDeveloperOptions(getCurrentPageDevs(page))
-          filterMenu.placeholder = filterPlaceholder(currentFilter);
+          filterMenu.placeholder = setFilterPlaceholder(currentFilter);
           if (getCurrentPageDevs(page).length === 0) {
-            filterMenu.placeholder = filterPlaceholder(currentFilter + ' - No developers found!')
+            filterMenu.placeholder = setFilterPlaceholder(currentFilter + ' - No developers found!')
           }
           firstRow.components = [filterMenu];
           secondRow.components = [selectMenu]
@@ -151,12 +152,13 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
         
         //selectMenu
         case selectMenu.customId:
+          bEmbedNotFound = false
           embed = await _resolveCurrentEmbed(
             getCurrentPageDevs(page), 
             getCurrentPageDevs(page).findIndex((dev: any) => dev.discord_id === i.values[0])
           );
           let selectedDevDiscord = getCurrentPageDevs(page).find(dev => dev.discord_id === i.values[0]).discord;
-          selectMenu.placeholder = menuPlaceholder(selectedDevDiscord, page)
+          selectMenu.placeholder = setMenuPlaceholder(selectedDevDiscord, page)
           break;
       }
     }
@@ -178,8 +180,8 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
       }
       selectMenu.options = _constructDeveloperOptions(getCurrentPageDevs(page))
       selectMenu.placeholder = embed.title!.includes("No developers found for the current filter") ? 
-        menuPlaceholder(null, page) :
-        menuPlaceholder(embed.title!.replace("'s profile", ""), page)
+        setMenuPlaceholder(null, page) :
+        setMenuPlaceholder(embed.title!.replace("'s profile", ""), page)
         
       secondRow.components = [selectMenu];
     }
@@ -240,7 +242,7 @@ function _constructDeveloperOptions(developers: any): any[] {
 
   developers.forEach((dev: { discord: string, discord_id: string, available: boolean, timezone: string }) => {
       developerOptions.push({
-      label: `#${`${developers.indexOf(dev)}`.padStart(4, '0')}  -  ${dev.discord}`,
+      label: `#${`${developers.indexOf(dev)}`.padStart(4, '0')}  -  ${dev.discord.charAt(0).toUpperCase() + dev.discord.slice(1)}`,
       description: `Available: ${dev.available ? '✅' : '❌'} - Timezone: ${dev.timezone.toUpperCase()}`,
       value: dev.discord_id,
     });
