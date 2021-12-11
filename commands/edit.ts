@@ -5,7 +5,6 @@ import { supabase } from '../database';
 export const data = new SlashCommandBuilder()
   .setName('edit')
   .setDescription('Edit your profile.')
-  .addStringOption(option => option.setName('position').setDescription('Enter your current position'))
   .addStringOption(option => option.setName('skills').setDescription('Enter your skills'))
   .addStringOption(option => option.setName('desired-skills').setDescription('Enter your desired skills')) 
   .addStringOption(option => option.setName('timezone').setDescription('Enter your timezone'))
@@ -18,7 +17,6 @@ export async function execute(interaction: CommandInteraction) {
     const { error } = await supabase
     .from('developers')
     .update({ 
-        ...(options.getString('position') != null && {position: options.getString('position')}),
         ...(options.getString('skills') != null && {skills: options.getString('skills')}),
         ...(options.getString('desired-skills') != null && {desired_skills: options.getString('desired-skills')}),
         ...(options.getString('timezone') != null && {timezone: options.getString('timezone')}),

@@ -8,7 +8,6 @@ import { validateTwitterHandle, validateGithubHandle } from '../utils/';
 export const data = new SlashCommandBuilder()
   .setName('add')
   .setDescription('Adds you to the developer pairing database.')
-  .addStringOption(option => option.setRequired(true).setName('position').setDescription('Enter your current position'))
   .addStringOption(option => option.setRequired(true).setName('timezone').setDescription('Enter your timezone'))
   .addStringOption(option => option.setRequired(true).setName('twitter').setDescription('Enter Twitter handle'))
   .addStringOption(option => option.setRequired(true).setName('github').setDescription('Enter Github handle'))
@@ -115,7 +114,6 @@ export async function execute(interaction: any) {
                     {
                         discord_id: interaction.user.id,
                         discord: interaction.user.tag,
-                        position: options.getString('position'),
                         skills: selectedSkills,
                         desired_skills: selectedDesiredSkills,
                         timezone: options.getString('timezone'),
@@ -141,7 +139,6 @@ export async function execute(interaction: any) {
                 const user = {
                     discord_id: interaction.user.id,
                     discord: interaction.user.tag,
-                    position: options.getString('position'),
                     skills: selectedSkills,
                     desired_skills: selectedDesiredSkills,
                     timezone: options.getString('timezone'),

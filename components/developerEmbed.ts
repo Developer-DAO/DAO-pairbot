@@ -6,7 +6,7 @@ export function createDeveloperEmbed(avatarURL: any, dev: any) : MessageEmbed {
 	.setColor('#0099ff')
 	.setTitle(`${dev.discord.charAt(0).toUpperCase() + dev.discord.slice(1)}'s profile`)
 	.setThumbnail(avatarURL)
-	.setDescription(dev.position)
+	.setDescription(dev.goal ?? ' ')
     .addFields(
         {name: 'Skills', value: dev.skills}, 
         {name: 'Desired Skills', value: dev.desired_skills},
