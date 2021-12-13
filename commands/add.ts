@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
-import { skills } from '../components/skills';
 import { supabase } from '../database';
 import { createDeveloperEmbed } from '../components/developerEmbed';
+import { constructSkillsMenu } from '../components/skills';
 import { validateTwitterHandle, validateGithubHandle } from '../utils/'; 
 
 export const data = new SlashCommandBuilder()
@@ -36,7 +36,7 @@ export async function execute(interaction: any) {
         return;
     }
 
-    let skillList = _constructFilterOptions(skills);
+    let skillList = constructSkillsMenu();
 
     const skillsMenu = new MessageSelectMenu()
     .setPlaceholder('Select your SKILLS!')
@@ -172,19 +172,3 @@ export async function execute(interaction: any) {
     });
 }
 
-function _constructFilterOptions(skills: any[]): any[] {
-    const filterOptions: { label: string; description: string, value: string; }[] = [];
-    
-    skills.forEach((dict: any) => {     //Filters through skills
-        for (let elem in dict) {     //Filters through the dictionary
-            for (let skill in dict[elem].sort()) {      //Filters through the values of the dictionary
-                filterOptions.push({
-                    label: dict[elem][skill],
-                    description: elem,
-                    value: dict[elem][skill],
-                })
-            }
-        }
-    })
-    return filterOptions;
-}
