@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
-import { createDeveloperEmbed } from '../components/developerEmbed';
+import { MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
 import { constructSkillsMenu } from '../components/skills';
 import { supabase } from '../database';
 import { validateGithubHandle, validateTwitterHandle } from '../utils';
@@ -143,8 +142,8 @@ export async function execute(interaction: any) {
         .from('developers')
         .update({ 
             ...(options.getString('timezone') != null && {timezone: options.getString('timezone')}),
-            ...(options.getString('twitter') != null && {twitter: options.getString('twitter')}),
-            ...(options.getString('github') != null && {github: options.getString('github')}),     
+            ...(options.getString('twitter') != null && {twitter: validateTwitterHandle(options.getString('twitter'))}),
+            ...(options.getString('github') != null && {github: validateGithubHandle(options.getString('github'))}),     
         }).eq('discord_id', interaction.user.id)
         
         if (error != null) {
