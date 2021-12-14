@@ -84,9 +84,7 @@ export async function execute(interaction: any) {
         });
         
         collector.on("end", async () => {
-            console.log('updating')
             if (!message.deleted) {
-                console.log('updatingggggggggg')
                 if (selectedSkills != undefined) {
     
                     selectedSkills = selectedSkills.join(', ');
