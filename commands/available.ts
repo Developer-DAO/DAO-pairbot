@@ -17,15 +17,15 @@ export async function execute(interaction: CommandInteraction) {
         ...(options.getString('goal') != null && {goal: options.getString('goal')}),     
     }).eq('discord_id', interaction.user.id)
     
-    let content = 'Successfully updated status to available!';
+    let resultMessage = 'Successfully updated status to available!';
     if (error.status == 404) {
-        content = 'You are not in the developers database! \nPlease use the **/add** command, set skills and desired skills to add yourself to the database!'
+        resultMessage = 'You are not in the developers database! \nPlease use the **/add** command, set skills and desired skills to add yourself to the database!'
     } else if (error.error) {
-        content = 'Something went wrong.';
+        resultMessage = 'Something went wrong.';
     }
 
     await interaction.reply({
-        content: content,
+        content: resultMessage,
         ephemeral: true,
     });
 }
