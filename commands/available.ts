@@ -19,7 +19,7 @@ export async function execute(interaction: CommandInteraction) {
     
     let resultMessage = 'Successfully updated status to available!';
     if (error.status == 404) {
-        resultMessage = 'You are not in the developers database! \nPlease use the **/add** command, set skills and desired skills to add yourself to the database!'
+        resultMessage = 'You are not in the pairing database! \nPlease use the **/add** command, set skills and desired skills to add yourself to the database!'
     } else if (error.error) {
         resultMessage = 'Something went wrong.';
     }
