@@ -6,7 +6,7 @@ create table public.developers (
   desired_skills varchar(250) NOT NULL,
   timezone varchar(15) NOT NULL,
   twitter varchar(15) NOT NULL,
-  github varchar(15) NOT NULL,
+  github varchar(39) NOT NULL,
   available BOOLEAN NOT NULL DEFAULT FALSE,
   goal varchar (200) DEFAULT NULL,
   updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
