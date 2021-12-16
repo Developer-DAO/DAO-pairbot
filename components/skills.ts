@@ -9,6 +9,20 @@ export const skills = [
     {'Other': ['Open source', 'GraphQL']}
 ]
 
-//skills.forEach((dict: any) => {                   //Filters through skills
-//    for (let elem in dict) {                      //Filters through the dictionary
-//        for (let skill in dict[elem].sort())      //Filters through the values of the dictionary
+//Used as options in a SelectMenu
+export function constructSkillsMenu(): any[] {
+    const filterOptions: { label: string; description: string, value: string; }[] = [];
+    
+    skills.forEach((dict: any) => {     //Filters through skills
+        for (let elem in dict) {     //Filters through the dictionary
+            for (let skill in dict[elem].sort()) {      //Filters through the values of the dictionary
+                filterOptions.push({
+                    label: dict[elem][skill],
+                    description: elem,
+                    value: dict[elem][skill],
+                })
+            }
+        }
+    })
+    return filterOptions;
+}

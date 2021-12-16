@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageActionRow, MessageButton, MessageSelectMenu } from 'discord.js';
-import { skills } from '../components/skills';
 import { supabase } from '../database';
 import { createDeveloperEmbed } from '../components/developerEmbed';
+import { constructSkillsMenu } from '../components/skills';
 import { validateTwitterHandle, validateGithubHandle } from '../utils/'; 
 
 export const data = new SlashCommandBuilder()
@@ -36,7 +36,7 @@ export async function execute(interaction: any) {
         return;
     }
 
-    let skillList = _constructFilterOptions(skills);
+    let skillList = constructSkillsMenu();
 
     const skillsMenu = new MessageSelectMenu()
     .setPlaceholder('Select your SKILLS!')
@@ -103,58 +103,12 @@ export async function execute(interaction: any) {
     });
 
     collector.on("end", async () => {
+
+        let resultMessage = 'You have successfully added yourself! \nIf you want to become available to pair now type **/available** !';
         if (!message.deleted) {
-            if (selectedSkills != undefined && selectedDesiredSkills != undefined) {
+            if (selectedSkills == undefined || selectedDesiredSkills == undefined) {
 
-                selectedSkills = selectedSkills.join(', ');
-                selectedDesiredSkills = selectedDesiredSkills.join(', ');
-                const { error } = await supabase
-                .from('developers')
-                .insert([
-                    {
-                        discord_id: interaction.user.id,
-                        discord: interaction.user.tag,
-                        skills: selectedSkills,
-                        desired_skills: selectedDesiredSkills,
-                        timezone: options.getString('timezone'),
-                        twitter: validateTwitterHandle(options.getString('twitter')),
-                        github: validateGithubHandle(options.getString('github'))
-                    }
-                ])
-    
-                if (error != null) {
-                    var content = 'Something went wrong.';
-                    if (error.code === '22001') {
-                        content = 'Value is too long.'
-                    }
-                    
-                    await interaction.editReply({
-                        content: content,
-                        components: [],
-                        ephemeral: true,
-                    }); 
-                    return;
-                }
-                
-                const user = {
-                    discord_id: interaction.user.id,
-                    discord: interaction.user.tag,
-                    skills: selectedSkills,
-                    desired_skills: selectedDesiredSkills,
-                    timezone: options.getString('timezone'),
-                    twitter: options.getString('twitter'),
-                    github: options.getString('github')
-                }
-
-                await interaction.editReply({
-                    content: 'Successfully added!',
-                    embeds: [createDeveloperEmbed(interaction.user?.avatarURL()!, user)],
-                    components: [],
-                    ephemeral: true,
-                });
-                return;
-
-            } else {
+                //Did not select skills AND desired skills
                 await interaction.editReply({
                     content: 'You need to select skills and desired skills to be able to save!',
                     components: [],
@@ -162,7 +116,58 @@ export async function execute(interaction: any) {
                 });
                 return;
             }
+
+            selectedSkills = selectedSkills.join(', ');
+            selectedDesiredSkills = selectedDesiredSkills.join(', ');
+            const { error } = await supabase
+            .from('developers')
+            .insert([
+                {
+                    discord_id: interaction.user.id,
+                    discord: interaction.user.tag,
+                    skills: selectedSkills,
+                    desired_skills: selectedDesiredSkills,
+                    timezone: options.getString('timezone'),
+                    twitter: validateTwitterHandle(options.getString('twitter')),
+                    github: validateGithubHandle(options.getString('github'))
+                }
+            ])
+
+            if (error != null) {
+                resultMessage = 'Something went wrong.';
+                if (error.code === '22001') {
+                    resultMessage = 'Value is too long.'
+                }
+                
+                //Error
+                await interaction.editReply({
+                    content: resultMessage,
+                    components: [],
+                    ephemeral: true,
+                }); 
+                return;
+            }
+            
+            const user = {
+                discord_id: interaction.user.id,
+                discord: interaction.user.tag,
+                skills: selectedSkills,
+                desired_skills: selectedDesiredSkills,
+                timezone: options.getString('timezone'),
+                twitter: options.getString('twitter'),
+                github: options.getString('github')
+            }
+
+            //Successfully added!
+            await interaction.editReply({
+                content: resultMessage,
+                embeds: [createDeveloperEmbed(interaction.user?.avatarURL()!, user)],
+                components: [],
+                ephemeral: true,
+            });
+            return;
         }
+
         await interaction.editReply({
             content: 'Something went wrong.',
             components: [],
@@ -172,19 +177,3 @@ export async function execute(interaction: any) {
     });
 }
 
-function _constructFilterOptions(skills: any[]): any[] {
-    const filterOptions: { label: string; description: string, value: string; }[] = [];
-    
-    skills.forEach((dict: any) => {     //Filters through skills
-        for (let elem in dict) {     //Filters through the dictionary
-            for (let skill in dict[elem].sort()) {      //Filters through the values of the dictionary
-                filterOptions.push({
-                    label: dict[elem][skill],
-                    description: elem,
-                    value: dict[elem][skill],
-                })
-            }
-        }
-    })
-    return filterOptions;
-}

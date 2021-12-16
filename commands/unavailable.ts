@@ -7,24 +7,22 @@ export const data = new SlashCommandBuilder()
   .setDescription('Set your status as unavailable for pairing')
 
 export async function execute(interaction: CommandInteraction) {
-    const { error } = await supabase
+    const error = await supabase
     .from('developers')
     .update({ 
         available: false,
         goal: null,     
     }).eq('discord_id', interaction.user.id)
    
-    if (error != null) {
-        await interaction.reply({
-            content: 'Something went wrong.',
-            ephemeral: true,
-        }); 
-
-        return
+    let resultMessage = 'Successfully updated status to unavailable!';
+    if (error.status == 404) {
+        resultMessage = 'You are not in the pairing database! \nPlease use the **/add** command, set skills and desired skills to add yourself to the database!'
+    } else if (error.error) {
+        resultMessage = 'Something went wrong.';
     }
 
     await interaction.reply({
-        content: 'Successfully updated status to unavailable!',
+        content: resultMessage,
         ephemeral: true,
     });
 }
