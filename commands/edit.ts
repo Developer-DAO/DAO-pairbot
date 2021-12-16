@@ -31,10 +31,10 @@ export async function execute(interaction: any) {
     .setStyle('SUCCESS')
     .setCustomId('save-button');
     let firstRow, secondRow, filter;
+    let resultMessage = 'Successfully updated!';
     
-    //Gets the chosen subcommand
     const command: string = options.getSubcommand();
-
+    //If want to edit skills/desired skills
     if (command != 'others') {
 
         const skillList = constructSkillsMenu();
@@ -83,6 +83,7 @@ export async function execute(interaction: any) {
         });
         
         collector.on("end", async () => {
+
             if (!message.deleted) {
                 if (selectedSkills != undefined) {
     
@@ -95,37 +96,25 @@ export async function execute(interaction: any) {
                     .update(toUpdate)
                     .eq('discord_id', interaction.user.id)
         
-                     if (error.error != null) {
-                        var content = 'Something went wrong.';
+                    //Error
+                    if (error.error != null) {
+                        resultMessage = 'Something went wrong.';
                         if (error.error.code === '22001') {
-                            content = 'Value is too long.'
+                            resultMessage = 'Value is too long.'
                         } else if (error.status == 404) {
-                            content = 'User not found!'
+                            resultMessage = 'User not found!'
                         }
-                        
-                        await interaction.editReply({
-                            content: content,
-                            components: [],
-                            ephemeral: true,
-                        }); 
-                        return;
                     }
-    
-                    await interaction.editReply({
-                        content: 'Successfully edited!',
-                        components: [],
-                        ephemeral: true,
-                    });
-                    return;
-    
                 } else {
-                    await interaction.editReply({
-                        content: `You need to select **${command}** to be able to save!`,
-                        components: [],
-                        ephemeral: true,
-                    });
-                    return;
+                    //Did not select anything from the dropdown
+                    resultMessage = `You need to select **${command}** to be able to save!`;
                 }
+                await interaction.editReply({
+                    content: resultMessage,
+                    components: [],
+                    ephemeral: true,
+                });
+                return;
             }
             await interaction.editReply({
                 content: 'Something went wrong.',
@@ -134,30 +123,24 @@ export async function execute(interaction: any) {
             });
             return;
         });
-
-    } else {
-        //If option selected = '/edit others'
-
-        const { error } = await supabase
-        .from('developers')
-        .update({ 
-            ...(options.getString('timezone') != null && {timezone: options.getString('timezone')}),
-            ...(options.getString('twitter') != null && {twitter: validateTwitterHandle(options.getString('twitter'))}),
-            ...(options.getString('github') != null && {github: validateGithubHandle(options.getString('github'))}),     
-        }).eq('discord_id', interaction.user.id)
-        
-        if (error != null) {
-            await interaction.reply({
-                content: 'Something went wrong.',
-                ephemeral: true,
-            }); 
-    
-            return
-        }
-    
-        await interaction.reply({
-            content: 'Successfully updated!',
-            ephemeral: true,
-        });
     }
+    
+    //If option selected = '/edit others'
+    const { error } = await supabase
+    .from('developers')
+    .update({ 
+        ...(options.getString('timezone') != null && {timezone: options.getString('timezone')}),
+        ...(options.getString('twitter') != null && {twitter: validateTwitterHandle(options.getString('twitter'))}),
+        ...(options.getString('github') != null && {github: validateGithubHandle(options.getString('github'))}),     
+    }).eq('discord_id', interaction.user.id)
+    
+    if (error != null) {
+        resultMessage = 'Something went wrong.';
+    }
+
+    await interaction.reply({
+        content: resultMessage,
+        ephemeral: true,
+    });
+
 }
