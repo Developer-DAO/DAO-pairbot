@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from "discord.js";
 import { supabase } from "../database";
 import { createDeveloperEmbed } from '../components/developerEmbed';
+import { client } from '..'
 
 export const data = new SlashCommandBuilder()
   .setName('invite')
@@ -129,6 +130,26 @@ export async function execute(interaction: CommandInteraction) {
         content: `You have been invited to pair up with ${interaction.user.tag}`,
         embeds: [inviterProfile],
         components: [buttonRow],
+    }).catch(error => {
+        // TODO: check and handle errors
+        (client.channels?.cache.get(process.env.DISCORD_CHANNEL_ID?? '') as TextChannel)?.send({
+            content: `Hello ${options.getUser('developer')?.id}, you've been invited to pair with ${interaction.user?.id}`,
+            components: [(new MessageActionRow().addComponents([
+                (
+                  new MessageButton()
+                  .setCustomId('json-' + JSON.stringify({
+                    operation: 'approveLog',
+                    inviteId: 1
+                  }))
+                  .setLabel('Accept').setStyle('SUCCESS')
+                ),
+                (
+                  new MessageButton()
+                  .setCustomId('failure')
+                  .setLabel('Decline')
+                  .setStyle('DANGER'))
+            ]))],
+        })
     });
   
     // Recording the invite in the 'invites' table
@@ -152,6 +173,4 @@ export async function execute(interaction: CommandInteraction) {
     await interaction.editReply({
         content: `Successfully invited ${options.getUser('developer')?.tag}!`,
     });
-
-    
 }
