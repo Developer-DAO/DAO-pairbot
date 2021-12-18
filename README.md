@@ -1,5 +1,5 @@
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <details>
   <summary>Table of Contents</summary>
@@ -94,6 +94,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://buxmann.dev"><img src="https://avatars.githubusercontent.com/u/21178318?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Buxmann</b></sub></a><br /><a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=mbuxmann" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Calvaz"><img src="https://avatars.githubusercontent.com/u/44518734?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Calvaz</b></sub></a><br /><a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=Calvaz" title="Code">💻</a></td>
     <td align="center"><a href="https://jimthedev.com"><img src="https://avatars.githubusercontent.com/u/108938?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jim Cummins</b></sub></a><br /><a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=jimthedev" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://cachemon.eth"><img src="https://avatars.githubusercontent.com/u/90769841?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cachemon.eth</b></sub></a><br /><a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=cachemonet0x0CF6619" title="Code">💻</a></td>
   </tr>
 </table>
 
