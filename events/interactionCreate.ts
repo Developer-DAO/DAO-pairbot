@@ -1,4 +1,4 @@
-import { TextChannel, ThreadChannel } from 'discord.js';
+import { MessageActionRow, MessageButton, TextChannel, ThreadChannel } from 'discord.js';
 import { supabase } from '../database';
 import {client} from '../index'
 import dotenv from 'dotenv';
@@ -32,12 +32,14 @@ export async function execute(interaction: any) {
         var starNames = require('@frekyll/star-names')
         const discordChannel = process.env.DISCORD_CHANNEL_ID
 
-        if (interaction.customId === 'accept'){
-            const { data, error } = await supabase
-            .from('invites')
-            .select()
-            .eq('message_id', interaction.message.id)
+        if (interaction.customId.includes('invite')) {
             
+            //Adding the invite to the invites table
+            const { data, error } = await supabase
+                .from('invites')
+                .select()
+                .eq('message_id', interaction.message.id)
+                
             if (error != null) {
                 await interaction.reply({
                     content: 'Something went wrong.',
@@ -46,65 +48,68 @@ export async function execute(interaction: any) {
         
                 return
             }
-       
-            const parentChannel = client.channels.cache.get(discordChannel!);
             const {sender_discord_id, receiver_discord_id} = data![0]; 
-           
-            // Create a thread and invite users.
-            (parentChannel as TextChannel).threads
-            .create({
-                name: `${starNames.random()}`,
-                autoArchiveDuration: 60,
-                reason: 'Needed a separate thread for pairing',
-            }).then(async (threadChannel: ThreadChannel) => {
-                threadChannel.members.add(sender_discord_id);
-                threadChannel.members.add(receiver_discord_id);
-                threadChannel.send(`:partying_face: :partying_face: <@${sender_discord_id}> and <@${receiver_discord_id}>, have a great pairing!`)
-    
-                // delete invite record
-                const { error } = await supabase
-                .from('invites')
-                .delete()
-                .eq('message_id', interaction.message.id)
-        
-                if (error != null) {
-                    await interaction.reply({
-                        content: 'Something went wrong.',
-                        ephemeral: true
-                    }); 
-            
-                    return;
-                } 
-            }).catch(console.error);
-    
-            // Let the inviter know if the user has accepted.
-            (await client.users.fetch(sender_discord_id)).send({
-                content: `${interaction.user.tag} has accepted your invite!`
-            })
-    
-            await interaction.reply({
-                content: 'Invitation successfully accepted!',
-            });
-        }
-    
-        if (interaction.customId === 'decline'){
-            const { error } = await supabase
-            .from('invites')
-            .delete()
-            .eq('message_id', interaction.message.id)
-    
-            if (error != null) {
-                await interaction.reply({
-                    content: 'Something went wrong.',
-                    ephemeral: true
-                }); 
-        
-                return;
-            }  
 
-            await interaction.reply({
-                content: 'Invitation successfully declined!',
-            });
+            //Invite received in the DMs
+            if (interaction.customId.includes('dm-invite')) {
+                //Deactivate buttons in dm
+                await interaction.update({
+                    components: [new MessageActionRow().addComponents(
+                        new MessageButton()
+                        .setCustomId(`dm-invite-accept-` + interaction.id)
+                        .setLabel('Accept').setStyle('SUCCESS').setDisabled(true),
+                        new MessageButton()
+                        .setCustomId(`dm-invite-decline-` + interaction.id)
+                        .setLabel('Decline').setStyle('DANGER').setDisabled(true))]
+                    });
+            }
+            
+            //Declined invite in the DM
+            if (interaction.customId.includes('dm-invite-decline')) {
+                await interaction.followUp({
+                    content: `Successfully **declined**!`,
+                });
+            }
+
+            //Accepted invite in the DM
+            if (interaction.customId.includes('dm-invite-accept')) {
+                await interaction.followUp({
+                    content: `Successfully **accepted**!`,
+                });
+            }
+
+            if (interaction.customId.includes('invite-accept') && interaction.user.id == receiver_discord_id){
+                
+                const parentChannel = client.channels.cache.get(discordChannel!);
+                // Create a thread and invite users.
+                (parentChannel as TextChannel).threads
+                .create({
+                    name: `${starNames.random()}`,
+                    autoArchiveDuration: 60,
+                    reason: 'Needed a separate thread for pairing',
+                }).then(async (threadChannel: ThreadChannel) => {
+                    threadChannel.members.add(sender_discord_id);
+                    threadChannel.members.add(receiver_discord_id);
+                    threadChannel.send(`:partying_face: :partying_face: Have a great pairing!!`)
+        
+                    // delete invite record
+                    const { error } = await supabase
+                    .from('invites')
+                    .delete()
+                    .eq('message_id', interaction.message.id)
+            
+                    if (error != null) {
+                        await interaction.reply({
+                            content: 'Something went wrong.',
+                            ephemeral: true
+                        }); 
+                
+                        return;
+                    } 
+                }).catch(console.error);
+            }
+        
+            
         }
     }
 }

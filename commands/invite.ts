@@ -12,6 +12,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: CommandInteraction) {
     const { options } = interaction;
+    const INVITE_WAITTIME = 6000000;
 
     await interaction.reply({
         content: `Busy inviting ${options.getUser('developer')?.tag}...`,
@@ -115,11 +116,11 @@ export async function execute(interaction: CommandInteraction) {
 
     const inviterProfile = createDeveloperEmbed(interaction.user?.avatarURL()!, inviterData![0])
 
-    const acceptButton = new MessageButton()
-    .setCustomId(`accept-` + interaction.id)
+    let acceptButton = new MessageButton()
+    .setCustomId(`dm-invite-accept-` + interaction.id)
     .setLabel('Accept').setStyle('SUCCESS')
-    const declineButton = new MessageButton()
-    .setCustomId(`decline-` + interaction.id)
+    let declineButton = new MessageButton()
+    .setCustomId(`dm-invite-decline-` + interaction.id)
     .setLabel('Decline').setStyle('DANGER')
 
     let buttonRow = new MessageActionRow()
@@ -130,13 +131,68 @@ export async function execute(interaction: CommandInteraction) {
         content: `You have been invited to pair up with ${interaction.user.tag}`,
         embeds: [inviterProfile],
         components: [buttonRow],
-    }).then(async (channelMsg) => {
+    }).then(async (dm) => {
+        let dmContent = `Successfully invited ${options.getUser('developer')?.tag}!`;
         await interaction.editReply({
-            content: `Successfully invited <@${options.getUser('developer')?.id}>!`,
+            content: dmContent,
         });
         
         // Recording the invite in the 'invites' table
         const { error: insertError } = await supabase
+        .from('invites')
+        .insert([{
+            message_id: dm.id,
+            sender_discord_id: interaction.user.id,
+            receiver_discord_id: options.getUser('developer')!.id,
+            created_at: interaction.createdAt,
+        }])
+
+        if (insertError != null) {
+            await interaction.editReply({
+                content: 'Something went wrong.',
+            }); 
+            return
+        }
+
+        const filter = (i: any) => 
+        i.customId === acceptButton.customId ||
+        i.customId === declineButton.customId;
+
+        //Update the message based on user click of accept/decline
+        dm.awaitMessageComponent({ filter, time: INVITE_WAITTIME })
+        .then(i => {
+            if (i.customId === acceptButton.customId) {
+                dmContent += '\n\nEDIT: The invite has been **ACCEPTED**! :partying_face: :partying_face: '
+            } else {
+                dmContent += '\n\nEDIT: The invite has been **DECLINED**!';
+            }
+            interaction.editReply({ content: dmContent });
+        })
+        .catch(() => interaction.editReply({ content: 'Something went wrong.' }));
+
+    }).catch(async (error) => {
+        //50007 = User doesnt accept DMs in the server
+        if (error.code != 50007) {
+            await interaction.editReply({
+                content: 'Something went wrong.',
+            }); 
+            return;
+        }
+
+        let channelMsgContent = `Hello <@${options.getUser('developer')?.id}>, you've been invited to pair with <@${interaction.user?.id}>!`;
+        acceptButton.setCustomId(`channel-invite-accept-` + interaction.id);
+        declineButton.setCustomId(`channel-invite-decline-` + interaction.id);
+
+        let buttonRow = new MessageActionRow()
+        .addComponents([acceptButton, declineButton])
+
+        const channelMsg = await (client.channels?.cache.get(process.env.DISCORD_CHANNEL_ID?? '') as TextChannel).send({
+            content: channelMsgContent,
+            components: [buttonRow],
+        });
+
+        // Recording the invite in the 'invites' table
+        const { data: d, error: insertError } = await supabase
         .from('invites')
         .insert([{
             message_id: channelMsg.id,
@@ -151,55 +207,25 @@ export async function execute(interaction: CommandInteraction) {
             }); 
             return
         }
-    }).catch(async (error) => {
-        //50007 = User doesnt accept DMs in the server
-        if (error.code != 50007) {
-            await interaction.editReply({
-                content: 'Something went wrong.',
-            }); 
-            return;
-        }
 
-        let channelMsgContent = `Hello <@${options.getUser('developer')?.id}>, you've been invited to pair with <@${interaction.user?.id}>!`;
-        const channelMsg = await (client.channels?.cache.get(process.env.DISCORD_CHANNEL_ID?? '') as TextChannel).send({
-            content: channelMsgContent,
-            components: [buttonRow],
-        });
-
-        const filter = (i: any) => 
-        (i.customId === acceptButton.customId ||
+        const filter = (i: any) => {
+        i.deferUpdate();
+        return (i.customId === acceptButton.customId ||
         i.customId === declineButton.customId) &&
         i.user.id === options.getUser('developer')!.id;
+        }
         
-        const collector = await channelMsg.createMessageComponentCollector({
+        const collector = channelMsg.createMessageComponentCollector({
             filter,
-            time: 60000,
-          })
+            time: INVITE_WAITTIME,
+        })
         collector.on("collect", async (i: MessageComponentInteraction) => {
             switch (i.customId) {
                 case acceptButton.customId:
-                    // Recording the invite in the 'invites' table
-                    const { error: insertError } = await supabase
-                    .from('invites')
-                    .insert([{
-                        message_id: i.message.id,
-                        sender_discord_id: interaction.user.id,
-                        receiver_discord_id: options.getUser('developer')!.id,
-                        created_at: interaction.createdAt,
-                    }])
-
-                    if (insertError != null) {
-                        await channelMsg.edit({
-                            content: 'Something went wrong.'
-                        })
-                        await interaction.editReply({
-                            content: 'Something went wrong.',
-                        }); 
-                        break;
-                    }
-
+                    
                     await channelMsg.edit({
-                        content: channelMsgContent + '\n\nEDIT: The invite has been **ACCEPTED**! :partying_face: :partying_face: '
+                        content: channelMsgContent + '\n\nEDIT: The invite has been **ACCEPTED**! :partying_face: :partying_face: ',
+                        components: []
                     });
                     await interaction.editReply({
                         content: `${options.getUser('developer')?.tag} has **ACCEPTED** your pairing invite! :partying_face: `,
@@ -207,20 +233,10 @@ export async function execute(interaction: CommandInteraction) {
                     break;
 
                 case declineButton.customId:
-                    const { error } = await supabase
-                    .from('invites')
-                    .delete()
-                    .eq('message_id', i.message.id)
-            
-                    if (error != null) {
-                        await interaction.editReply({
-                            content: 'Something went wrong.',
-                        });
-                        return;
-                    }  
 
                     await channelMsg.edit({
-                        content: channelMsgContent + '\n\nEDIT: The invite has been **DECLINED**.'
+                        content: channelMsgContent + '\n\nEDIT: The invite has been **DECLINED**.',
+                        components: []
                     });
                     await interaction.editReply({
                         content: `${options.getUser('developer')?.tag} has **DECLINED** your pairing invite.`,
@@ -232,11 +248,19 @@ export async function execute(interaction: CommandInteraction) {
     
         collector.on("end", async () => {
             if (!channelMsg.deleted) {
-                channelMsg.edit({
-                    components: []
-                });
+
+                //If time expired and no buttons have been clicked, disable them
+                if (channelMsg.components.length) {
+                    channelMsg.edit({ components: [new MessageActionRow().addComponents(
+                        new MessageButton()
+                        .setCustomId(`dm-invite-accept-` + interaction.id)
+                        .setLabel('Accept').setStyle('SUCCESS').setDisabled(true),
+                        new MessageButton()
+                        .setCustomId(`dm-invite-decline-` + interaction.id)
+                        .setLabel('Decline').setStyle('DANGER').setDisabled(true))]
+                    })
+                }
             }
-            return;
         });
     });
 }
