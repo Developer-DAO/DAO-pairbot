@@ -59,6 +59,7 @@ export async function execute(interaction: any) {
             }).then(async (threadChannel: ThreadChannel) => {
                 threadChannel.members.add(sender_discord_id);
                 threadChannel.members.add(receiver_discord_id);
+                threadChannel.send(`:partying_face: :partying_face: <@${sender_discord_id}> and <@${receiver_discord_id}>, have a great pairing!`)
     
                 // delete invite record
                 const { error } = await supabase
@@ -100,7 +101,7 @@ export async function execute(interaction: any) {
         
                 return;
             }  
-    
+
             await interaction.reply({
                 content: 'Invitation successfully declined!',
             });

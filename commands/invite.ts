@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from "discord.js";
+import { CommandInteraction, MessageActionRow, MessageButton, MessageComponentInteraction, TextChannel } from "discord.js";
 import { supabase } from "../database";
 import { createDeveloperEmbed } from '../components/developerEmbed';
 import { client } from '..'
@@ -116,61 +116,127 @@ export async function execute(interaction: CommandInteraction) {
     const inviterProfile = createDeveloperEmbed(interaction.user?.avatarURL()!, inviterData![0])
 
     const acceptButton = new MessageButton()
-    .setCustomId(`accept`)
+    .setCustomId(`accept-` + interaction.id)
     .setLabel('Accept').setStyle('SUCCESS')
     const declineButton = new MessageButton()
-    .setCustomId(`decline`)
+    .setCustomId(`decline-` + interaction.id)
     .setLabel('Decline').setStyle('DANGER')
 
-    const buttonRow = new MessageActionRow()
+    let buttonRow = new MessageActionRow()
     .addComponents([acceptButton, declineButton])
   
     // Sends private message to user
-    const inviteMessage = options.getUser('developer')?.send({          
+    options.getUser('developer')?.send({          
         content: `You have been invited to pair up with ${interaction.user.tag}`,
         embeds: [inviterProfile],
         components: [buttonRow],
-    }).catch(error => {
-        // TODO: check and handle errors
-        (client.channels?.cache.get(process.env.DISCORD_CHANNEL_ID?? '') as TextChannel)?.send({
-            content: `Hello ${options.getUser('developer')?.id}, you've been invited to pair with ${interaction.user?.id}`,
-            components: [(new MessageActionRow().addComponents([
-                (
-                  new MessageButton()
-                  .setCustomId('json-' + JSON.stringify({
-                    operation: 'approveLog',
-                    inviteId: 1
-                  }))
-                  .setLabel('Accept').setStyle('SUCCESS')
-                ),
-                (
-                  new MessageButton()
-                  .setCustomId('failure')
-                  .setLabel('Decline')
-                  .setStyle('DANGER'))
-            ]))],
-        })
-    });
-  
-    // Recording the invite in the 'invites' table
-    const { error: insertError } = await supabase
-    .from('invites')
-    .insert([{
-        message_id: (await inviteMessage)?.id,
-        sender_discord_id: interaction.user.id,
-        receiver_discord_id: options.getUser('developer')!.id,
-        created_at: interaction.createdAt,
-    }])
-
-    if (insertError != null) {
+    }).then(async (channelMsg) => {
         await interaction.editReply({
-            content: 'Something went wrong.',
-        }); 
+            content: `Successfully invited <@${options.getUser('developer')?.id}>!`,
+        });
+        
+        // Recording the invite in the 'invites' table
+        const { error: insertError } = await supabase
+        .from('invites')
+        .insert([{
+            message_id: channelMsg.id,
+            sender_discord_id: interaction.user.id,
+            receiver_discord_id: options.getUser('developer')!.id,
+            created_at: interaction.createdAt,
+        }])
 
-        return
-    }
+        if (insertError != null) {
+            await interaction.editReply({
+                content: 'Something went wrong.',
+            }); 
+            return
+        }
+    }).catch(async (error) => {
+        //50007 = User doesnt accept DMs in the server
+        if (error.code != 50007) {
+            await interaction.editReply({
+                content: 'Something went wrong.',
+            }); 
+            return;
+        }
 
-    await interaction.editReply({
-        content: `Successfully invited ${options.getUser('developer')?.tag}!`,
+        let channelMsgContent = `Hello <@${options.getUser('developer')?.id}>, you've been invited to pair with <@${interaction.user?.id}>!`;
+        const channelMsg = await (client.channels?.cache.get(process.env.DISCORD_CHANNEL_ID?? '') as TextChannel).send({
+            content: channelMsgContent,
+            components: [buttonRow],
+        });
+
+        const filter = (i: any) => 
+        (i.customId === acceptButton.customId ||
+        i.customId === declineButton.customId) &&
+        i.user.id === options.getUser('developer')!.id;
+        
+        const collector = await channelMsg.createMessageComponentCollector({
+            filter,
+            time: 60000,
+          })
+        collector.on("collect", async (i: MessageComponentInteraction) => {
+            switch (i.customId) {
+                case acceptButton.customId:
+                    // Recording the invite in the 'invites' table
+                    const { error: insertError } = await supabase
+                    .from('invites')
+                    .insert([{
+                        message_id: i.message.id,
+                        sender_discord_id: interaction.user.id,
+                        receiver_discord_id: options.getUser('developer')!.id,
+                        created_at: interaction.createdAt,
+                    }])
+
+                    if (insertError != null) {
+                        await channelMsg.edit({
+                            content: 'Something went wrong.'
+                        })
+                        await interaction.editReply({
+                            content: 'Something went wrong.',
+                        }); 
+                        break;
+                    }
+
+                    await channelMsg.edit({
+                        content: channelMsgContent + '\n\nEDIT: The invite has been **ACCEPTED**! :partying_face: :partying_face: '
+                    });
+                    await interaction.editReply({
+                        content: `${options.getUser('developer')?.tag} has **ACCEPTED** your pairing invite! :partying_face: `,
+                    }); 
+                    break;
+
+                case declineButton.customId:
+                    const { error } = await supabase
+                    .from('invites')
+                    .delete()
+                    .eq('message_id', i.message.id)
+            
+                    if (error != null) {
+                        await interaction.editReply({
+                            content: 'Something went wrong.',
+                        });
+                        return;
+                    }  
+
+                    await channelMsg.edit({
+                        content: channelMsgContent + '\n\nEDIT: The invite has been **DECLINED**.'
+                    });
+                    await interaction.editReply({
+                        content: `${options.getUser('developer')?.tag} has **DECLINED** your pairing invite.`,
+                    });
+                    break;
+            }
+            collector.stop();
+        });
+    
+        collector.on("end", async () => {
+            if (!channelMsg.deleted) {
+                channelMsg.edit({
+                    components: []
+                });
+            }
+            return;
+        });
     });
 }
