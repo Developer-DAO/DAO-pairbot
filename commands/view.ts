@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { CommandInteraction, Message, MessageActionRow, MessageButton, MessageComponentInteraction } from 'discord.js';
 import { supabase } from '../database';
 import { createDeveloperEmbed } from '../components/developerEmbed';
+import { inviteDeveloper } from '../components/inviteDeveloper';
 
 export const data = new SlashCommandBuilder()
   .setName('view')
@@ -52,7 +53,7 @@ export async function execute(interaction: CommandInteraction) {
 
     const inviteRow = new MessageActionRow()
     .addComponents(new MessageButton()
-    .setCustomId('invite')
+    .setCustomId('view' + interaction.id)
     .setLabel('Invite').setStyle('SUCCESS')
     .setDisabled(!data![0].available || alreadyInvited!.length !== 0))
 
@@ -66,67 +67,42 @@ export async function execute(interaction: CommandInteraction) {
 
     if (!(interactionMessage instanceof Message)) { return; }
   
-    const buttonReply = await interactionMessage.awaitMessageComponent({ componentType: 'BUTTON' });
-    
-    if (!buttonReply) {
-      return;
-    }
-    const { data: inviterData, error: inviterError } = await supabase
-    .from('developers')
-    .select()
-    .eq('discord_id', interaction.user?.id)
-  
-    if (inviterError != null) {
-        await interaction.reply({
-            content: 'Something went wrong.',
-            ephemeral: true,
-        }); 
-
-        return
-    }
-
-    const inviterProfile = createDeveloperEmbed(interaction.user?.avatarURL()!, inviterData![0])
-    
-    const acceptButton = new MessageButton()
-    .setCustomId(`accept`)
-    .setLabel('Accept').setStyle('SUCCESS')
-    const declineButton = new MessageButton()
-    .setCustomId(`decline`)
-    .setLabel('Decline').setStyle('DANGER')
-    const buttonRow = new MessageActionRow()
-    .addComponents([acceptButton, declineButton])
-    
-    const buttonSelected = buttonReply.customId;
-    
-    if (buttonSelected === 'invite') {
-        const inviteMessage = options.getUser('developer')?.send({  
-            content: `You have been invited to pair up with ${interaction.user.tag}`,
-            embeds: [inviterProfile],
-            components: [buttonRow],
-        });
-
-        // Recording the invite in the 'invites' table
-        const { error: insertError } = await supabase
-        .from('invites')
-        .insert([{
-            message_id: (await inviteMessage)?.id,
-            sender_discord_id: interaction.user.id,
-            receiver_discord_id: options.getUser('developer')!.id,
-            created_at: interaction.createdAt,
-        }])
-
-        if (insertError != null) {
-            await interaction.editReply({
+    const filter = (i: any) => {
+        i.deferUpdate();
+        return i.customId === 'view' + interaction.id; }
+        
+    //Invite button
+    await interactionMessage
+    .awaitMessageComponent({ filter, time: 60000, componentType: 'BUTTON' })
+    .then(async (i: MessageComponentInteraction) => {
+        const { data: inviterData, error: inviterError } = await supabase
+        .from('developers')
+        .select()
+        .eq('discord_id', interaction.user?.id)
+      
+        if (inviterError != null) {
+            await interaction.reply({
                 content: 'Something went wrong.',
+                ephemeral: true,
             }); 
-
+    
             return
         }
+        
+        //Invites the developer
+        if (i.customId === 'view' + interaction.id) {
+            await inviteDeveloper(interaction, options, inviterData);
+        }
 
-        await buttonReply.reply({
-            content: `Successfully invited ${data![0].discord}`,
-            ephemeral: true,
-        });
-    }
-    
+        const disabledButton = new MessageActionRow()
+        .addComponents(new MessageButton()
+        .setCustomId('view' + interaction.id)
+        .setLabel('Invite').setStyle('SUCCESS').setDisabled(true));
+
+        interaction.editReply({
+            content: '**INVITED**!',
+            components: [disabledButton]
+        })
+    })
+    .catch((err: any) => console.log(err))
 }
