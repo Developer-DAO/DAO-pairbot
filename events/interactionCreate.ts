@@ -29,12 +29,13 @@ export async function execute(interaction: any) {
 
     // handle interactions that are buttons
     if (interaction.isButton()) {
-        var starNames = require('@frekyll/star-names')
-        const discordChannel = process.env.DISCORD_CHANNEL_ID
 
         if (interaction.customId.includes('invite')) {
+
+            var starNames = require('@frekyll/star-names')
+            const discordChannel = process.env.DISCORD_CHANNEL_ID
             
-            //Adding the invite to the invites table
+            //Getting the invite from the invites table
             const { data, error } = await supabase
                 .from('invites')
                 .select()
@@ -61,7 +62,7 @@ export async function execute(interaction: any) {
                         new MessageButton()
                         .setCustomId(`dm-invite-decline-` + interaction.id)
                         .setLabel('Decline').setStyle('DANGER').setDisabled(true))]
-                    });
+                });
             }
             
             //Declined invite in the DM
