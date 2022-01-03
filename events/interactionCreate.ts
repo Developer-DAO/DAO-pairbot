@@ -30,7 +30,8 @@ export async function execute(interaction: any) {
     // handle interactions that are buttons
     if (interaction.isButton()) {
 
-        if (interaction.customId.includes('invite')) {
+        if (interaction.customId.includes('dm-invite') ||
+            interaction.customId.includes('channel-invite')) {
 
             var starNames = require('@frekyll/star-names')
             const discordChannel = process.env.DISCORD_CHANNEL_ID

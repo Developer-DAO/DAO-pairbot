@@ -20,12 +20,12 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
     .setStyle("SECONDARY");
 
   const acceptButton = new MessageButton()
-    .setCustomId("accept-invite")
+    .setCustomId("accept-invites")
     .setLabel("Accept")
     .setStyle("SUCCESS");
 
   const declineButton = new MessageButton()
-    .setCustomId("decline-invite")
+    .setCustomId("decline-invites")
     .setLabel("Decline")
     .setStyle("DANGER");
 
@@ -39,11 +39,13 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
     fetchReply: true,
   });
 
-  const filter = (i) =>
-    i.customId === buttonList[0].customId ||
+  const filter = (i) => {
+    i.deferUpdate();
+    return i.customId === buttonList[0].customId ||
     i.customId === buttonList[1].customId ||
     i.customId === buttonList[2].customId ||
-    i.customId === buttonList[3].customId;
+    i.customId === buttonList[3].customId
+  }
 
   const collector = await curPage.createMessageComponentCollector({
     filter,
@@ -73,6 +75,7 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
           .then(async (threadChannel) => {
             threadChannel.members.add(inviter);
             threadChannel.members.add(invitee);
+            threadChannel.send(`:partying_face: :partying_face: Have a great pairing!!`);
 
             // delete invite record
             const { error } = await supabase
@@ -89,14 +92,8 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
               return;
             }
 
-            let inviteUser = await client.users.fetch(inviter);
-            // Let the inviter know if the user has accepted.
-            inviteUser.send({
-              content: `${interaction.user.tag} has accepted your invite!`,
-            });
-
             await interaction.followUp({
-              content: "Invitation successfully accepted!",
+              content: `The invite has been **ACCEPTED**! :partying_face: `,
             });
           })
           .catch(async (error) => {
@@ -105,6 +102,8 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
               content: "Something went wrong",
             });
           });
+        pages.pop(pages[page]);
+        page = page > 0 ? --page : pages.length - 1;
         break;
       case buttonList[3].customId:
         const { error } = await supabase
@@ -123,16 +122,19 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
         }
 
         await interaction.followUp({
-          content: "Invitation successfully declined!",
+          content: `The invite has been **DECLINED**!`,
         });
+        pages.pop(pages[page]);
+        page = page > 0 ? --page : pages.length - 1;
         break;
       default:
         break;
     }
-    await i.deferUpdate();
-    await i.editReply({
-      embeds: [pages[page].setFooter(`Page ${page + 1} / ${pages.length}`)],
-      components: [row],
+    if (pages.length === 0) collector.stop();
+    await interaction.editReply({
+      content: pages.length === 0 ? "You have no invites." : undefined,
+      embeds: pages.length !== 0 ? [pages[page].setFooter(`Page ${page + 1} / ${pages.length}`)] : [],
+      components: pages.length !== 0 ? [row] : []
     });
     collector.resetTimer();
   });
@@ -146,8 +148,9 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
       );
 
       interaction.editReply({
-        embeds: [pages[page].setFooter(`Page ${page + 1} / ${pages.length}`)],
-        components: [disabledRow],
+        content: pages.length !== 0 ? undefined : "You have no invites.",
+        embeds: pages.length !== 0 ? [pages[page].setFooter(`Page ${page + 1} / ${pages.length}`)] : [],
+        components: pages.length !== 0 ? [disabledRow] : [],
       });
     }
   });
