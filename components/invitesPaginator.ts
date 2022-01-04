@@ -1,3 +1,5 @@
+import { MessageComponentInteraction, MessageEmbed, MessageInteraction, ThreadChannel } from "discord.js";
+
 const { MessageActionRow, MessageButton } = require("discord.js");
 const { supabase } = require("../database");
 const { client } = require("../index");
@@ -5,7 +7,7 @@ var starNames = require("@frekyll/star-names");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
+const paginationEmbed = async (interaction: any, pages: MessageEmbed[], senderDiscordIds: []) => {
   if (!pages) throw new Error("Pages are not given.");
   let page = 0;
 
@@ -39,7 +41,7 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
     fetchReply: true,
   });
 
-  const filter = (i) => {
+  const filter = (i: any) => {
     i.deferUpdate();
     return i.customId === buttonList[0].customId ||
     i.customId === buttonList[1].customId ||
@@ -52,7 +54,7 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
     time: 120000,
   });
 
-  collector.on("collect", async (i) => {
+  collector.on("collect", async (i: MessageComponentInteraction) => {
     const inviter = senderDiscordIds[page];
     const invitee = interaction.user.id;
     switch (i.customId) {
@@ -72,7 +74,7 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
             autoArchiveDuration: 60,
             reason: "Needed a separate thread for pairing",
           })
-          .then(async (threadChannel) => {
+          .then(async (threadChannel: ThreadChannel) => {
             threadChannel.members.add(inviter);
             threadChannel.members.add(invitee);
             threadChannel.send(`:partying_face: :partying_face: Have a great pairing!!`);
@@ -96,13 +98,13 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
               content: `The invite has been **ACCEPTED**! :partying_face: `,
             });
           })
-          .catch(async (error) => {
+          .catch(async (error: any) => {
             console.log(error);
             await interaction.editReply({
               content: "Something went wrong",
             });
           });
-        pages.pop(pages[page]);
+        pages = pages.splice(page);
         page = page > 0 ? --page : pages.length - 1;
         break;
       case buttonList[3].customId:
@@ -124,7 +126,7 @@ const paginationEmbed = async (interaction, pages, senderDiscordIds) => {
         await interaction.followUp({
           content: `The invite has been **DECLINED**!`,
         });
-        pages.pop(pages[page]);
+        pages = pages.splice(page);
         page = page > 0 ? --page : pages.length - 1;
         break;
       default:

@@ -26,6 +26,7 @@ export async function execute(interaction: CommandInteraction) {
         return;
     }
 
+    console.log('SSSSSSSSSSSSS')
     //Checking inviter
     const { data: inviterData, error: inviterError } = await supabase
     .from('developers')
