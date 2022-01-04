@@ -11,7 +11,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon index.ts",
         "dev-commands": "nodemon deploy-commands.ts",
-        "build": "tsc"
+        "build": "tsc --allowJs"
     },
     "dependencies": {
         "@discordjs/builders": "^0.8.2",
