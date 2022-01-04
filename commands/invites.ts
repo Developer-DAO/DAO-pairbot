@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
-import { createDeveloperEmbed } from '../utils/developerEmbed';
+import { createDeveloperEmbed } from '../components/developerEmbed';
 const invitesPaginator = require('../components/invitesPaginator.js')
 
 export const data = new SlashCommandBuilder()
