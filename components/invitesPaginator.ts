@@ -104,7 +104,7 @@ const paginationEmbed = async (interaction: any, pages: MessageEmbed[], senderDi
               content: "Something went wrong",
             });
           });
-        pages = pages.splice(page);
+        pages = pages.filter((value) => value != pages[page]);
         page = page > 0 ? --page : pages.length - 1;
         break;
       case buttonList[3].customId:
@@ -126,7 +126,7 @@ const paginationEmbed = async (interaction: any, pages: MessageEmbed[], senderDi
         await interaction.followUp({
           content: `The invite has been **DECLINED**!`,
         });
-        pages = pages.splice(page);
+        pages = pages.filter((value) => value != pages[page]);
         page = page > 0 ? --page : pages.length - 1;
         break;
       default:
