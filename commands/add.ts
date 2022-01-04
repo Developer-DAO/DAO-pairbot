@@ -104,7 +104,7 @@ export async function execute(interaction: any) {
 
     collector.on("end", async () => {
 
-        let resultMessage = 'You have successfully added yourself! \nIf you want to become available to pair now type **/available** !';
+        let resultMessage = 'You have successfully added yourself! \nIf you want to become available to pair now, type **/available** !';
         if (!message.deleted) {
             if (selectedSkills == undefined || selectedDesiredSkills == undefined) {
 
