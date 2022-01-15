@@ -18,7 +18,7 @@ export const InteractionCreateEvent: any = {
       
             if (!command) return;
             try {
-                if (command.roles.length > 0) {
+                if (command?.roles?.length > 0) {
                   if (interaction.member.roles instanceof GuildMemberRoleManager) {
                     const hasRole = interaction.member.roles.cache.some(role => command.roles.includes(role.name.toLowerCase()));
                     if (!hasRole) {
