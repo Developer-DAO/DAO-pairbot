@@ -1,1 +1,1 @@
-worker: node dist/index.js
+worker: node dist/deploy-commands.js && node dist/index.js
