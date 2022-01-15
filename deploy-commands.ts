@@ -7,7 +7,7 @@ import fs from 'fs';
 dotenv.config()
 
 const commands: SlashCommandBuilder[] = []
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.ts'));
+const commandFiles = fs.readdirSync('./commands').filter(file => {file.endsWith('.ts') || file.endsWith('.js')});
     (async () => {
         for (const file of commandFiles) {
             const command = await import(`./commands/${file}`);
