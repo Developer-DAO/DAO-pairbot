@@ -3,7 +3,7 @@ import { CommandInteraction } from 'discord.js';
 import { client } from '..';
 import { supabase } from '../database';
 import { createDeveloperEmbed } from '../components/developerEmbed';
-const invitesPaginator = require('../components/invitesPaginator.js')
+const invitesPaginator = require('../components/invitesPaginator.ts')
 
 export const data = new SlashCommandBuilder()
     .setName('invites')

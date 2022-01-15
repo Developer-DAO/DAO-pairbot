@@ -158,7 +158,8 @@ export async function generateDevelopersPaginator(interaction: any, developers: 
             getCurrentPageDevs(page).findIndex((dev: any) => dev.discord_id === i.values[0])
           );
           let selectedDevDiscord = getCurrentPageDevs(page).find(dev => dev.discord_id === i.values[0]).discord;
-          selectMenu.placeholder = setMenuPlaceholder(selectedDevDiscord, page)
+          selectMenu.placeholder = setMenuPlaceholder(selectedDevDiscord, page);
+          secondRow.components = [selectMenu];
           break;
       }
     }
