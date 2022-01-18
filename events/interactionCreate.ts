@@ -13,7 +13,7 @@ export const InteractionCreateEvent: any = {
   
         // handle interactions that are commands
         if (interaction.client instanceof discordClient && interaction.isCommand()) {
-            console.log('testcommand');
+         
             //@ts-ignore
             const command = interaction.client.commands.get(interaction.commandName);
       
@@ -47,11 +47,8 @@ export const InteractionCreateEvent: any = {
             }
         }
         
-        console.log('tests');
-        
         // handle interactions that are buttons
         if (interaction.isButton()) {
-            console.log('testbutton');
             if (interaction.customId.includes('dm-invite') ||
                 interaction.customId.includes('channel-invite')) {
                
@@ -76,7 +73,6 @@ export const InteractionCreateEvent: any = {
     
                 //Invite received in the DMs
                 if (interaction.customId.includes('dm-invite')) {
-                    console.log('test');
                     //Deactivate buttons in dm
                     await interaction.update({
                         components: [new MessageActionRow().addComponents(
