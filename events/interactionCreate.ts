@@ -12,7 +12,8 @@ export const InteractionCreateEvent: any = {
         if (!interaction.isCommand() && !interaction.isButton() || interaction.user.bot) return;
   
         // handle interactions that are commands
-        if (interaction.client instanceof discordClient) {
+        if (interaction.client instanceof discordClient && interaction.isCommand()) {
+         
             //@ts-ignore
             const command = interaction.client.commands.get(interaction.commandName);
       
@@ -46,13 +47,11 @@ export const InteractionCreateEvent: any = {
             }
         }
         
-    
         // handle interactions that are buttons
         if (interaction.isButton()) {
-    
             if (interaction.customId.includes('dm-invite') ||
                 interaction.customId.includes('channel-invite')) {
-    
+               
                 var starNames = require('@frekyll/star-names')
                 const discordChannel = process.env.DISCORD_CHANNEL_ID
                 
