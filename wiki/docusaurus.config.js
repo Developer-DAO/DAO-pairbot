@@ -14,7 +14,7 @@ const config = {
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "Developer-DAO", // Usually your GitHub org/user name.
-  projectName: "pairbot-wiki", // Usually your repo name.
+  projectName: "DAO-pairbot", // Usually your repo name.
 
   presets: [
     [
