@@ -2,8 +2,10 @@ name: Test deployment
 
 on:
   pull_request:
-    branches: [main]
-    paths: [wiki/**]
+    branches:
+      - "main"
+    paths: 
+      - "wiki/**"
 
 jobs:
   test-deploy:
@@ -16,7 +18,7 @@ jobs:
           node-version: 14.x
           cache: yarn
       - name: Test build
-        working-directory: wiki
+        working-directory: wiki   
         run: |
           yarn install --frozen-lockfile
           yarn build
