@@ -1,9 +1,11 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
-    paths: [wiki/**]
+  pull_request:
+    branches:
+      - "main"
+    paths: 
+      - "wiki/**"
 
 jobs:
   deploy:
@@ -15,8 +17,9 @@ jobs:
         with:
           node-version: 14.x
           cache: yarn
+          cache-dependency-path: 'wiki/yarn.lock'
       - name: Build website
-        working-directory: website
+        working-directory: wiki
         run: |
           yarn install --frozen-lockfile
           yarn build
