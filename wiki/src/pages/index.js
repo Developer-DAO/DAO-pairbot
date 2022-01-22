@@ -24,7 +24,6 @@ function HomepageHeader() {
             Docusaurus Tutorial - 5min ⏱️
           </Link>
         </div>
-        <h1>Dark mode is now {isDarkTheme ? "on" : "off"}</h1>
       </div>
     </header>
   );
