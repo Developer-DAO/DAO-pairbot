@@ -9,7 +9,7 @@ const config = {
   title: "Pairbot Wiki",
   tagline: "Discord Pairbot",
   url: "https://Developer-DAO.github.io",
-  baseUrl: "/",
+  baseUrl: "/DAO-pairbot/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
