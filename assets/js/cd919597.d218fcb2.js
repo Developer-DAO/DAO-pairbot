@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkpairbot_wiki=self.webpackChunkpairbot_wiki||[]).push([[457],{4322:function(a){a.exports=JSON.parse('{"allTagsPath":"/DAO-pairbot/blog/tags","slug":"/DAO-pairbot/blog/tags/facebook","name":"facebook","count":1,"permalink":"/DAO-pairbot/blog/tags/facebook"}')}}]);
