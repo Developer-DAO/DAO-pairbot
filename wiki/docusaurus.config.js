@@ -44,7 +44,7 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Pairbot. Built with Docusaurus.`,
       },
       prism: {
-        theme: lightCodeTheme,
+        theme: darkCodeTheme,
         darkTheme: darkCodeTheme,
       },
       colorMode: {
