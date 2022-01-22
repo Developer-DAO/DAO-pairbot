@@ -28,6 +28,6 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 }
 
 html[data-theme='dark'] {
-      --ifm-background-color: #1e2125;
+  --ifm-background-color: #1e2125;
   --ifm-background-surface-color: #121212;
 }
