@@ -59,7 +59,7 @@ const config = {
           },
           {
             href: "https://github.com/developer-dao/DAO-pairbot",
-            label: "GitHub",
+            label: "GitHusb",
             position: "right",
           },
         ],
