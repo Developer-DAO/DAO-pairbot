@@ -5,9 +5,11 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import styles from "./index.module.css";
 import HomepageFeatures from "../components/HomepageFeatures";
-import useThemeContext from '@theme/hooks/useThemeContext';
+import useThemeContext from "@theme/hooks/useThemeContext";
 
 function HomepageHeader() {
+  const { isDarkTheme, setLightTheme, setDarkTheme } = useThemeContext();
+
   const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
@@ -22,6 +24,7 @@ function HomepageHeader() {
             Docusaurus Tutorial - 5min ⏱️
           </Link>
         </div>
+        <h1>Dark mode is now {isDarkTheme ? "on" : "off"}</h1>
       </div>
     </header>
   );

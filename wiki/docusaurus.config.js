@@ -16,34 +16,9 @@ const config = {
   organizationName: "Developer-DAO", // Usually your GitHub org/user name.
   projectName: "DAO-pairbot", // Usually your repo name.
 
-  presets: [
-    [
-      "classic",
-      /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
-        docs: {
-          sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
-          editUrl: "https://github.com/developer-dao/DAO-pairbot",
-          remarkPlugins: [
-            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
-          ],
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl: "https://github.com/developer-dao/DAO-pairbot",
-        },
-        theme: {
-          customCss: require.resolve("./src/css/custom.css"),
-        },
-      }),
-    ],
-  ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
+    {
       navbar: {
         title: "Pairbot",
         logo: {
@@ -74,17 +49,42 @@ const config = {
       },
       colorMode: {
         // "light" | "dark"
-        defaultMode: 'dark',
+        defaultMode: "dark",
 
         // Hides the switch in the navbar
         // Useful if you want to support a single color mode
-        disableSwitch: false,
-        
+        disableSwitch: true,
+
         // Should we use the prefers-color-scheme media-query,
         // using user system preferences, instead of the hardcoded defaultMode
         respectPrefersColorScheme: false,
-      }
-    }),
+      },
+    },
+
+  presets: [
+    [
+      "@docusaurus/preset-classic",
+      /** @type {import('@docusaurus/preset-classic').Options} */
+      ({
+        docs: {
+          sidebarPath: require.resolve("./sidebars.js"),
+          // Please change this to your repo.
+          editUrl: "https://github.com/developer-dao/DAO-pairbot",
+          remarkPlugins: [
+            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
+          ],
+        },
+        blog: {
+          showReadingTime: true,
+          // Please change this to your repo.
+          editUrl: "https://github.com/developer-dao/DAO-pairbot",
+        },
+        theme: {
+          customCss: require.resolve("./src/css/custom.css"),
+        },
+      }),
+    ],
+  ],
 };
 
 module.exports = config;
