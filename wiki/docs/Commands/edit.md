@@ -35,4 +35,3 @@ The third option is `/edit desired_skills` which allows you to edit your desired
 </div>
 <br/>
 
-
