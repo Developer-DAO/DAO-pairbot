@@ -31,3 +31,7 @@ html[data-theme='dark'] {
   --ifm-background-color: #1e2125;
   --ifm-background-surface-color: #121212;
 }
+
+.default-border {
+    border-radius: 5px;
+}
