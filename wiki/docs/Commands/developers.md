@@ -35,7 +35,7 @@ Head over to the [Developers Portal](https://discord.com/developers/applications
 Enter a name you would like to give to your Pairbot and press create. Under settings (on the left hand side) click on the Bot tab.
 
 <div align="center">
-    <img src={useBaseUrl("/img/configuration/bot-tab.png")} alt="Bot tab image" />
+    <img class="default-border"  src={useBaseUrl("/img/configuration/bot-tab.png")} alt="Bot tab image" />
 </div>
 <br/>
 
@@ -44,21 +44,21 @@ To the right you should click on the `Add Bot` button. Read the modal carefully 
 We will now need to give the Pairbot the right permissions and add it to our server. Click on the OAuth2 tab on the left hand side, under settings. After it has expanded click on the URL Generator tab.
 
 <div align="center">
-    <img src={useBaseUrl("/img/configuration/url-generator.png")} alt="Bot url generator image" />
+    <img class="default-border"  src={useBaseUrl("/img/configuration/url-generator.png")} alt="Bot url generator image" />
 </div>
 <br/>
 
 Select the following:
 
 <div align="center">
-    <img src={useBaseUrl("/img/configuration/bot-permissions.png")} alt="Bot permissions image" />
+    <img class="default-border"  src={useBaseUrl("/img/configuration/bot-permissions.png")} alt="Bot permissions image" />
 </div>
 <br/>
 
 Underneath you will see a generated url, click on the copy button and paste it into your preferred browser. You should see the following modal appear, when you are logged in.
 
 <div align="center">
-    <img src={useBaseUrl("/img/configuration/invite-modal.png")} alt="Bot Invite Modal" />
+    <img class="default-border"  src={useBaseUrl("/img/configuration/invite-modal.png")} alt="Bot Invite Modal" />
 </div>
 <br/>
 
@@ -67,7 +67,7 @@ Pick the server you would like to add the Pairbot to and click on `Continue`. Ma
 We will now need to configure the Discord environment variables that we need for our Pairbot to run. To get these variables we will need to head back to the [Discord Developer Portal](https://discord.com/developers/applications). Click on the bot account you have just created and select the `OAuth2` tab on the right hand side under settings. This will automatically select the `General` tab underneath it.
 
 <div align="center">
-    <img src={useBaseUrl("/img/configuration/general-tab.png")} alt="Bot general tab" />
+    <img class="default-border"  src={useBaseUrl("/img/configuration/general-tab.png")} alt="Bot general tab" />
 </div>
 <br/>
 
@@ -94,7 +94,7 @@ DISCORD_CHANNEL_ID=
 We will now head over to our Discord server to find the last two variables we need. Right click on the server's icon and click on `Copy ID`. This is our Guild ID variable. 
 
 <div align="center">
-    <img src={useBaseUrl("/img/configuration/guildid.png")} alt="Bot Guild ID Variable" />
+    <img class="default-border"  src={useBaseUrl("/img/configuration/guildid.png")} alt="Bot Guild ID Variable" />
 </div>
 <br/>
 
