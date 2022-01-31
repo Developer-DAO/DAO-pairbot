@@ -14,7 +14,7 @@ Use the `/invites` command to see all the invites you have received throughout t
 </div>
 <br/>
 
-You will then be able to go through them and accept or decline them.
+You will then be able to go through each of them and accept or decline it.
 
 <div align="center">
     <img class="default-border" src={useBaseUrl("/img/commands/invites-message.png")} alt="Inivtes Message" />

@@ -7,7 +7,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Add
 
-Use the `/add` command to add yourself to the pairing database. It requires three parameters: timezone, Twitter and Github. 
+Use the `/add` command to add yourself to the pairing database. It requires three parameters: Timezone, a Twitter tag and a Github tag. 
 
 <div align="center">
     <img class="default-border"  src={useBaseUrl("/img/commands/add.png")} alt="Add Command" />
