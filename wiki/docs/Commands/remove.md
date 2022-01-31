@@ -2,12 +2,16 @@
 title: Remove
 sidebar_position: 8
 ---
-# Run the Pairbot
 
-To run the Pairbot locally you will need open up your terminal and navigate to the Pairbot's directory. Inside you will need to run the following command:
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
-```bash npm2yarn
-npm run dev
-```
+# Remove
 
-Thanks to [Nodemon](https://github.com/remy/nodemon) you won't need to restart you server each time you make a change. It will automatically detect any file changes and restart the Pairbot.
+Use the `/remove` command and select `True` if you whish to remove yourself from the database.
+
+<div align="center">
+    <img class="default-border" src={useBaseUrl("/img/commands/remove.png")} alt="Remove Command" />
+</div>
+<br/>
+
+
