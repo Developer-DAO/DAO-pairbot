@@ -23,6 +23,24 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "jimthedev",
+      "name": "Jim Cummins",
+      "avatar_url": "https://avatars.githubusercontent.com/u/108938?v=4",
+      "profile": "https://jimthedev.com",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "cachemonet0x0CF6619",
+      "name": "cachemon.eth",
+      "avatar_url": "https://avatars.githubusercontent.com/u/90769841?v=4",
+      "profile": "http://cachemon.eth",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

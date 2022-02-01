@@ -2,21 +2,26 @@
     "name": "pairingbot",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "license": "ISC",
+    "main": "index.ts",
+    "engines": {
+        "node": "16.13.0"
+    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon index.ts"
+        "dev": "nodemon index.ts",
+        "build": "tsc --allowJs"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
     "dependencies": {
         "@discordjs/builders": "^0.8.2",
         "@discordjs/rest": "^0.1.0-canary.0",
+        "@frekyll/star-names": "^1.1.1",
         "@supabase/supabase-js": "^1.28.0",
         "ascii-table": "^0.0.9",
         "discord.js": "^13.3.1",
-        "dotenv": "^10.0.0"
+        "dotenv": "^10.0.0",
+        "moment": "^2.29.1",
+        "toad-scheduler": "^1.6.0"
     },
     "devDependencies": {
         "nodemon": "^2.0.15",

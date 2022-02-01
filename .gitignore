@@ -2,3 +2,26 @@ node_modules/
 .env
 .supabase
 prisma/.env
+
+
+# Wiki 
+# Dependencies
+wiki/node_modules
+
+# Production
+wiki/build
+
+# Generated files
+wiki/.docusaurus
+wiki/.cache-loader
+
+# Misc
+wiki/.DS_Store
+wiki/.env.local
+wiki/.env.development.local
+wiki/.env.test.local
+wiki/.env.production.local
+
+wiki/npm-debug.log*
+wiki/yarn-debug.log*
+wiki/yarn-error.log*
