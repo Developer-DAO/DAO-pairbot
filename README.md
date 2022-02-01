@@ -90,7 +90,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="http://buxmann.dev"><img src="https://avatars.githubusercontent.com/u/21178318?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Buxmann</b></sub></a><br /><a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=mbuxmann" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/Calvaz"><img src="https://avatars.githubusercontent.com/u/44518734?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Calvaz</b></sub></a><br /><a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=Calvaz" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Calvaz"><img src="https://avatars.githubusercontent.com/u/44518734?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Calvaz</b></sub></a><br /><a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=Calvaz" title="Code">💻</a> <a href="https://github.com/Developer-DAO/DAO-pairbot/commits?author=Calvaz" title="Documentation">📖</a></td>
   </tr>
 </table>
 
