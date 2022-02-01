@@ -21,7 +21,7 @@ After inviting an user they will receive a private message from Pairbot. They wi
 </div>
 <br/>
 
-If however they have disabled private messages it will be post publicly in the pair-bot-messages channel.
+If, however, private messages are disabled, it will be posted publicly in the pair-bot-messages channel.
 
 <div align="center">
     <img class="default-border" src={useBaseUrl("/img/commands/invite-public-message.png")} alt="Inivte Public Message" />
