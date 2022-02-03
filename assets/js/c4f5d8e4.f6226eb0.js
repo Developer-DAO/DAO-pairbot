@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkpairbot_wiki=self.webpackChunkpairbot_wiki||[]).push([[195],{2841:function(t,e,i){i.r(e),i.d(e,{default:function(){return o}});var n=i(7294),r=(i(2434),i(2263)),a=i(4996),u=i(6775);function o(){(0,r.Z)().siteConfig;return n.createElement(u.l_,{to:(0,a.Z)("/docs/Getting%20Started/installation")})}}}]);
