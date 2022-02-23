@@ -7,10 +7,13 @@ dotenv.config()
 const botToken = process.env.DISCORD_TOKEN
 export const client = new discordClient({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
 
-console.log('Loading bot');
-client.commands = new Collection();
-client.loadCommandsToClient();
-client.loadEventsToClient();
-client.login(botToken);
-Scheduler()
+(async () => {
+    console.log('Loading bot');
+    client.commands = new Collection();
+    await client.loadCommandsToServer();
+    client.loadCommandsToClient();
+    client.loadEventsToClient();
+    client.login(botToken);
+    Scheduler()
+})()
 

@@ -10,7 +10,6 @@ export function createDeveloperEmbed(avatarURL: any, dev: any) : MessageEmbed {
     .addFields(
         {name: 'Skills', value: dev.skills}, 
         {name: 'Desired Skills', value: dev.desired_skills},
-        {name: 'Goal', value: dev.goal ?? "none"},
         {name: 'Available', value: dev.available ? '✅' : '❌', inline: true},
         {name: '\u200b', value: '\u200b', inline: true},
         {name: 'Timezone', value: dev.timezone.toUpperCase(), inline: true},
