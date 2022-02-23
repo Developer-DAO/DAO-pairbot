@@ -2,6 +2,7 @@ import { MessageActionRow, MessageButton, TextChannel, ThreadChannel } from 'dis
 import { supabase } from '../database';
 import {client} from '../index'
 import dotenv from 'dotenv';
+import { DiscordAPIError } from '@discordjs/rest';
 dotenv.config()
 
 export const name = 'interactionCreate';
@@ -37,12 +38,12 @@ export async function execute(interaction: any) {
             const discordChannel = process.env.DISCORD_CHANNEL_ID
             
             //Getting the invite from the invites table
-            const { data, error } = await supabase
+            const { data, error: selError } = await supabase
                 .from('invites')
                 .select()
                 .eq('message_id', interaction.message.id)
                 
-            if (error != null) {
+            if (selError != null) {
                 await interaction.reply({
                     content: 'Something went wrong.',
                     ephemeral: true
@@ -88,30 +89,47 @@ export async function execute(interaction: any) {
                 .create({
                     name: `${starNames.random()}`,
                     autoArchiveDuration: 60,
-                    reason: 'Needed a separate thread for pairing',
+                    type: 'GUILD_PRIVATE_THREAD',
+                    reason: 'Needed a separate thread for pairing'
                 }).then(async (threadChannel: ThreadChannel) => {
                     threadChannel.members.add(sender_discord_id);
                     threadChannel.members.add(receiver_discord_id);
                     threadChannel.send(`:partying_face: :partying_face: Have a great pairing!!`)
         
-                    // delete invite record
-                    const { error } = await supabase
-                    .from('invites')
-                    .delete()
-                    .eq('message_id', interaction.message.id)
-            
-                    if (error != null) {
-                        await interaction.reply({
-                            content: 'Something went wrong.',
-                            ephemeral: true
-                        }); 
-                
-                        return;
-                    } 
-                }).catch(console.error);
-            }
+                }).catch((e: DiscordAPIError) => {
+
+                    //Guild premium subscription level too low
+                    if (e.code == 20035) {
+                        (parentChannel as TextChannel).threads
+                        .create({
+                            name: `${starNames.random()}`,
+                            autoArchiveDuration: 60,
+                            reason: 'Needed a separate thread for pairing'
+                        })
+                        .then(async (threadChannel: ThreadChannel) => {
+                            threadChannel.members.add(sender_discord_id);
+                            threadChannel.members.add(receiver_discord_id);
+                            threadChannel.send(`:partying_face: :partying_face: Have a great pairing!!`)
+                        })
+                        .catch(err => console.log(err));
+                    }
+                });
+
+                // delete invite record
+                const { error: delError } = await supabase
+                .from('invites')
+                .delete()
+                .eq('message_id', interaction.message.id)
         
+                if (delError != null) {
+                    await interaction.reply({
+                        content: 'Something went wrong.',
+                        ephemeral: true
+                    }); 
             
+                    return;
+                }
+            }
         }
     }
 }
