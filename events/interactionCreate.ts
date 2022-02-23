@@ -103,6 +103,7 @@ export const InteractionCreateEvent: any = {
                     }).catch((e: DiscordAPIError) => {
     
                         //Guild premium subscription level too low
+                        console.log(e);
                         if (e.code == 20035) {
                             (parentChannel as TextChannel).threads
                             .create({
