@@ -28,13 +28,13 @@ const config = {
         items: [
           {
             type: "doc",
-            docId: "introduction",
+            docId: "Getting Started/installation",
             position: "left",
             label: "Documentation",
           },
           {
             href: "https://github.com/developer-dao/DAO-pairbot",
-            label: "GitHubs",
+            label: "GitHub",
             position: "right",
           },
         ],
