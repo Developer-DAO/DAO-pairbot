@@ -1,45 +1,25 @@
 import React from "react";
-import clsx from "clsx";
 import Layout from "@theme/Layout";
-import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import styles from "./index.module.css";
-import HomepageFeatures from "../components/HomepageFeatures";
-import useThemeContext from "@theme/hooks/useThemeContext";
-
-function HomepageHeader() {
-  const { isDarkTheme, setLightTheme, setDarkTheme } = useThemeContext();
-
-  const { siteConfig } = useDocusaurusContext();
-  return (
-    <header className={clsx("hero hero--primary", styles.heroBanner)}>
-      <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/introduction"
-          >
-            Docusaurus Tutorial - 5min ⏱️
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
-}
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import {Redirect} from '@docusaurus/router';
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
+
+  return <Redirect to={useBaseUrl('/docs/Getting%20Started/installation')}/>;
   return (
     <Layout
       title={`Hello from ${siteConfig.title}`}
       description="Description will go into a meta tag in <head />"
     >
-      <HomepageHeader />
-      <main>
-        <HomepageFeatures />
-      </main>
+      <header>
+        <img
+          style={{ height: "85vh" }}
+          src={useBaseUrl("/img/landing/header.jpg")}
+          alt="Logo"
+        />
+      </header>
     </Layout>
   );
 }

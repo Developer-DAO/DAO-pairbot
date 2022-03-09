@@ -1,10 +1,10 @@
 ---
-title: Run
+title: Run Locally
 sidebar_position: 3
 ---
 # Run the Pairbot
 
-To run the Pairbot you will need open your terminal and navigate to the Pairbot's directory. Inside you will need to run the following command:
+To run the Pairbot locally you will need open up your terminal and navigate to the Pairbot's directory. Inside you will need to run the following command:
 
 ```bash npm2yarn
 npm run dev
