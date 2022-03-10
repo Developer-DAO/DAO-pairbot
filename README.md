@@ -68,11 +68,15 @@ The idea behind the bot is to help people collaborate, learn and in the end make
 These are the current commands the bot supports:
 - `/add` - Add yourself to the pairing database
 - `/edit` - Edit your profile on the pairing database
+- `/edit others` - Edit your profile's twitter/github/timezone on the pairing database
+- `/edit experience` - Edit your profile experience level on the pairing database
+- `/edit skills` - Edit your profile skills on the pairing database
+- `/edit desired_skills` - Edit your profile desired skills on the pairing database
 - `/available` - Set yourself as available
 - `/unavailable` - Set yourself as unavailable
-- `/developers all` - List all developers in the paring database 
-- `/developers available` - List all available developers in the pairing database
+- `/developers` - List all developers in the paring database 
 - `/invite` - Invite an available developer to pair up with
+- `/invites` - List all the invites people sent you 
 - `/remove` - Remove yourself from the pairing database
 
 ## Roadmap
