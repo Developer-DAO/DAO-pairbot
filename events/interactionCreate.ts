@@ -122,14 +122,6 @@ export const InteractionCreateEvent: any = {
               reason: "Needed a separate thread for pairing",
             })
             .then(async (threadChannel: ThreadChannel) => {
-              threadChannel.members.add(sender_discord_id);
-              threadChannel.members.add(receiver_discord_id);
-              threadChannel.send(
-                `:partying_face: :partying_face: Have a great pairing!!
-                 Rember you can always add more people by mentioning them. e.g. @username
-                 Please find below a shared online codespace. Remember to enable live session and invite someone by sharing the link!`
-              );
-
               const parameters = getParameters({
                 files: {
                   "index.js": {
@@ -141,7 +133,11 @@ export const InteractionCreateEvent: any = {
 
               const sandboxId = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`;
 
-              threadChannel.send(sandboxId);
+              threadChannel.members.add(sender_discord_id);
+              threadChannel.members.add(receiver_discord_id);
+              threadChannel.send(
+                `:partying_face: :partying_face: Have a great pairing!!\nRember you can always add more people by mentioning them. e.g. @username\nPlease find below a shared online codespace. Remember to enable live session and invite someone by sharing the link!\n${sandboxId}`
+              );
             })
             .catch((e: DiscordAPIError) => {
               //Guild premium subscription level too low
