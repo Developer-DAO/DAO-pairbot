@@ -25,4 +25,6 @@ create table public.invites (
   constraint fk_receiver_discord_id
     foreign key (receiver_discord_id) 
       references developers(discord_id) on delete cascade
-)
+);
+
+alter table public.developers add experience varchar(50);
